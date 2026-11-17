@@ -66,4 +66,8 @@ object MovieRepository {
             posterRes = R.drawable.poster_home_alone
         )
     )
+    val genres: List<String> = movies.map { it.genre }.distinct()
+    fun getMovieById(movieId: Int): Movie? {
+        return movies.find { it.id == movieId }
+    }
 }
