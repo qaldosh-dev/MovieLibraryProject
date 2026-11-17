@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="movie_card_save">Save</string>
+    <string name="movie_card_remove">Remove</string>
+    <string name="movie_card_poster_description">Movie poster</string>
+    <string name="movie_card_no_poster">No poster</string>
+</resources>
