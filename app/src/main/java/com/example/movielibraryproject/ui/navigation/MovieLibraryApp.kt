@@ -14,10 +14,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.movielibraryproject.ui.screens.CatalogScreen
 import com.example.movielibraryproject.ui.screens.GenresScreen
+import com.example.movielibraryproject.ui.screens.FavoritesScreen
 import com.example.movielibraryproject.viewmodel.MovieViewModel
 
 private const val CatalogRoute = "catalog?genre={genre}"
 private const val GenresRoute = "genres"
+private const val FavoritesRoute = "favorites"
 
 @Composable
 fun MovieLibraryApp() {
@@ -66,6 +68,13 @@ fun MovieLibraryApp() {
                         launchSingleTop = true
                     }
                 }
+            )
+        }
+        composable(FavoritesRoute) {
+            FavoritesScreen(
+                movies = uiState.favoriteMovies,
+                onMovieClick = {},
+                onFavoriteClick = movieViewModel::toggleFavorite
             )
         }
     }
