@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites_title">My Favorites</string>
+    <string name="favorites_empty_title">Your favorites list is empty</string>
+    <string name="favorites_empty_message">Add movies to your favorites to see them here.</string>
+</resources>
