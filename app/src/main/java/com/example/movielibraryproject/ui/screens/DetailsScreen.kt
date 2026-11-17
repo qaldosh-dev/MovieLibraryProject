@@ -1,6 +1,7 @@
 package com.example.movielibraryproject.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,11 +45,15 @@ fun DetailsScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Image(
             painter = painterResource(movie.posterRes),
-            contentDescription = null,
+            contentDescription = stringResource(
+                R.string.details_poster_description,
+                movie.title
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp),
@@ -60,18 +66,48 @@ fun DetailsScreen(
         )
 
         Text(
-            text = movie.year.toString(),
+            text = stringResource(
+                R.string.details_year,
+                movie.year
+            ),
             style = MaterialTheme.typography.bodyMedium
         )
 
         Text(
-            text = movie.genre,
+            text = stringResource(
+                R.string.details_genre,
+                movie.genre
+            ),
             style = MaterialTheme.typography.bodyMedium
+        )
+
+        Text(
+            text = stringResource(
+                R.string.details_rating,
+                movie.rating
+            ),
+            style = MaterialTheme.typography.titleMedium
         )
 
         Text(
             text = movie.description,
             style = MaterialTheme.typography.bodyLarge
         )
+
+        Button(
+            onClick = onFavoriteClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(
+                    if (isFavorite) {
+                        R.string.details_remove_favorite
+                    } else {
+                        R.string.details_add_favorite
+                    }
+                )
+            )
+        }
     }
 }
+
