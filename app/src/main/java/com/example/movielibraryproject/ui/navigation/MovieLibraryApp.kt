@@ -7,6 +7,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,7 +44,9 @@ fun MovieLibraryApp() {
     val navController = rememberNavController()
     val currentEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentEntry?.destination?.route
+    val currentGenre = currentEntry?.arguments?.getString("genre")
     val isDetails = currentRoute == DetailsRoute
+    val isFilteredCatalog = currentRoute == CatalogRoute && currentGenre != null
     val title = stringResource(
         when (currentRoute) {
             GenresRoute -> R.string.navigation_genres
@@ -60,7 +63,16 @@ fun MovieLibraryApp() {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(title) })
+            TopAppBar(
+                title = { Text(title) },
+                navigationIcon = {
+                    if (isDetails || isFilteredCatalog) {
+                        TextButton(onClick = { navController.popBackStack() }) {
+                            Text(stringResource(R.string.navigation_back))
+                        }
+                    }
+                }
+            )
         },
         bottomBar = {
             if (!isDetails) {
