@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,5 +35,24 @@ fun DetailsScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        Text(
+            text = movie.title,
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Text(
+            text = movie.year.toString(),
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Text(
+            text = movie.genre,
+            style = MaterialTheme.typography.bodyMedium
+        )
+
+        Text(
+            text = movie.description,
+            style = MaterialTheme.typography.bodyLarge
+        )
     }
 }
