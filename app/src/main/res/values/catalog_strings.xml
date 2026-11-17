@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="catalog_search_label">Search movies</string>
+    <string name="catalog_selected_genre">Genre: %1$s</string>
+    <string name="catalog_clear_genre">Clear genre filter</string>
+    <string name="catalog_no_results">No movies found</string>
+</resources>
