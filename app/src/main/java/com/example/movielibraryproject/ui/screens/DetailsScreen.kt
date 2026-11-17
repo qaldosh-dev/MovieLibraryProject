@@ -22,6 +22,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.movielibraryproject.R
 import com.example.movielibraryproject.model.Movie
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 
 @Composable
 fun DetailsScreen(
@@ -108,6 +110,52 @@ fun DetailsScreen(
                 )
             )
         }
+    }
+}
+
+private val previewMovie = Movie(
+    id = 1,
+    title = "Interstellar",
+    year = 2014,
+    genre = "Science Fiction",
+    rating = 9.0,
+    description = "A pilot travels to distant stars to find a new home for humanity.",
+    posterRes = R.drawable.poster_interstellar
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailsScreenPreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailsScreenFavoritePreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = true,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailsScreenNotFoundPreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = null,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
     }
 }
 
