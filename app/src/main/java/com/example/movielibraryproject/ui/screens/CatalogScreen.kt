@@ -20,6 +20,9 @@ import androidx.compose.ui.unit.dp
 import com.example.movielibraryproject.R
 import com.example.movielibraryproject.ui.components.MovieCard
 import com.example.movielibraryproject.viewmodel.MovieUiState
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.movielibraryproject.data.MovieRepository
+import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 
 @Composable
 fun CatalogScreen(
@@ -104,4 +107,53 @@ fun CatalogScreen(
             }
         }
     }
+}
+
+@Composable
+private fun CatalogPreviewContent(uiState: MovieUiState) {
+    MovieLibraryProjectTheme {
+        CatalogScreen(
+            uiState = uiState,
+            onQueryChange = {},
+            onMovieClick = {},
+            onFavoriteClick = {},
+            onClearGenre = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CatalogScreenPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(
+            movies = MovieRepository.movies,
+            genres = MovieRepository.genres,
+            favoriteIds = setOf(1)
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CatalogGenrePreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(
+            movies = MovieRepository.movies,
+            genres = MovieRepository.genres,
+            selectedGenre = "Comedy"
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CatalogNoResultsPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(
+            movies = MovieRepository.movies,
+            genres = MovieRepository.genres,
+            searchQuery = "unknown movie"
+        )
+    )
 }
