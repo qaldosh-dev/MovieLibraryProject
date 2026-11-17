@@ -12,6 +12,9 @@ import com.example.movielibraryproject.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import com.example.movielibraryproject.ui.components.MovieCard
 
 @Composable
 fun FavoritesScreen(
@@ -35,6 +38,26 @@ fun FavoritesScreen(
                 Text(
                     text = stringResource(R.string.favorites_empty_message),
                     style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
+    } else {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            items(
+                items = movies,
+                key = { movie -> movie.id }
+            ) { movie ->
+                MovieCard(
+                    movie = movie,
+                    isFavorite = true,
+                    onMovieClick = {
+                        onMovieClick(movie.id)
+                    },
+                    onFavoriteClick = {
+                        onFavoriteClick(movie.id)
+                    }
                 )
             }
         }
