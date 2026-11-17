@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="navigation_catalog">Catalog</string>
+    <string name="navigation_genres">Genres</string>
+    <string name="navigation_favorites">Favorites</string>
+    <string name="navigation_details">Movie details</string>
+    <string name="navigation_back">Back</string>
+</resources>
