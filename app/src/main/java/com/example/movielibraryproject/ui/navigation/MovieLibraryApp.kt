@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.movielibraryproject.ui.screens.CatalogScreen
+import com.example.movielibraryproject.ui.screens.DetailsScreen
 import com.example.movielibraryproject.ui.screens.GenresScreen
 import com.example.movielibraryproject.ui.screens.FavoritesScreen
 import com.example.movielibraryproject.viewmodel.MovieViewModel
@@ -20,6 +21,7 @@ import com.example.movielibraryproject.viewmodel.MovieViewModel
 private const val CatalogRoute = "catalog?genre={genre}"
 private const val GenresRoute = "genres"
 private const val FavoritesRoute = "favorites"
+private const val DetailsRoute = "details/{movieId}"
 
 @Composable
 fun MovieLibraryApp() {
@@ -48,7 +50,11 @@ fun MovieLibraryApp() {
             CatalogScreen(
                 uiState = uiState.copy(selectedGenre = genre),
                 onQueryChange = movieViewModel::onSearchQueryChange,
-                onMovieClick = {},
+                onMovieClick = { movieId ->
+                    navController.navigate("details/$movieId") {
+                        launchSingleTop = true
+                    }
+                },
                 onFavoriteClick = movieViewModel::toggleFavorite,
                 onClearGenre = {
                     navController.navigate("catalog") {
@@ -73,8 +79,28 @@ fun MovieLibraryApp() {
         composable(FavoritesRoute) {
             FavoritesScreen(
                 movies = uiState.favoriteMovies,
-                onMovieClick = {},
+                onMovieClick = { movieId ->
+                    navController.navigate("details/$movieId") {
+                        launchSingleTop = true
+                    }
+                },
                 onFavoriteClick = movieViewModel::toggleFavorite
+            )
+        }
+        composable(
+            route = DetailsRoute,
+            arguments = listOf(
+                navArgument("movieId") { type = NavType.IntType }
+            )
+        ) { entry ->
+            val movieId = entry.arguments?.getInt("movieId")
+            val movie = uiState.movies.find { it.id == movieId }
+            DetailsScreen(
+                movie = movie,
+                isFavorite = movie != null && movie.id in uiState.favoriteIds,
+                onFavoriteClick = {
+                    movie?.let { movieViewModel.toggleFavorite(it.id) }
+                }
             )
         }
     }
