@@ -3,6 +3,8 @@ package com.example.movielibraryproject.ui.navigation
 import android.net.Uri
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -40,6 +43,7 @@ fun MovieLibraryApp() {
     val navController = rememberNavController()
     val currentEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentEntry?.destination?.route
+    val isDetails = currentRoute == DetailsRoute
     val title = stringResource(
         when (currentRoute) {
             GenresRoute -> R.string.navigation_genres
@@ -48,9 +52,35 @@ fun MovieLibraryApp() {
             else -> R.string.navigation_catalog
         }
     )
+    val bottomDestinations = listOf(
+        "catalog" to R.string.navigation_catalog,
+        GenresRoute to R.string.navigation_genres,
+        FavoritesRoute to R.string.navigation_favorites
+    )
+
     Scaffold(
         topBar = {
             TopAppBar(title = { Text(title) })
+        },
+        bottomBar = {
+            if (!isDetails) {
+                NavigationBar {
+                    bottomDestinations.forEach { (route, labelRes) ->
+                        val label = stringResource(labelRes)
+                        val selected = if (route == "catalog") {
+                            currentRoute == CatalogRoute
+                        } else {
+                            currentRoute == route
+                        }
+                        NavigationBarItem(
+                            selected = selected,
+                            onClick = { navController.openMainSection(route) },
+                            icon = { Text(label.take(1)) },
+                            label = { Text(label) }
+                        )
+                    }
+                }
+            }
         }
     ) { innerPadding ->
         NavHost(
@@ -129,5 +159,12 @@ fun MovieLibraryApp() {
                 )
             }
         }
+    }
+}
+
+private fun NavHostController.openMainSection(route: String) {
+    navigate(route) {
+        popUpTo(graph.findStartDestination().id)
+        launchSingleTop = true
     }
 }
