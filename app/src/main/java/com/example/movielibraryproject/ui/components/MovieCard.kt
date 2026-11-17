@@ -1,4 +1,3 @@
-
 package com.example.movielibraryproject.ui.components
 
 import androidx.compose.foundation.layout.Column
@@ -32,6 +31,22 @@ fun MovieCard(
                 Text(
                     text = movie.title,
                     style = MaterialTheme.typography.titleMedium
+                )
+
+                Text(
+                    text = movie.year.toString(),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = movie.genre,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Text(
+                    text = "★ ${movie.rating}/10",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
             }
         }
