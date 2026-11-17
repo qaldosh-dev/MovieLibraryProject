@@ -15,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import com.example.movielibraryproject.ui.components.MovieCard
+import androidx.compose.ui.tooling.preview.Preview
+
 
 @Composable
 fun FavoritesScreen(
@@ -61,5 +63,49 @@ fun FavoritesScreen(
                 )
             }
         }
+    }
+}
+@Preview(showBackground = true)
+@Composable
+fun FavoritesScreenEmptyPreview() {
+    MaterialTheme {
+        FavoritesScreen(
+            movies = emptyList(),
+            onMovieClick = {},
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun FavoritesScreenFilledPreview() {
+    val sampleMovies = listOf(
+        Movie(
+            id = 1,
+            title = "Interstellar",
+            year = 2014,
+            genre = "Science Fiction",
+            rating = 8.7,
+            description = "A science fiction movie about space.",
+            posterRes = 0
+        ),
+        Movie(
+            id = 2,
+            title = "The Martian",
+            year = 2015,
+            genre = "Science Fiction",
+            rating = 8.0,
+            description = "An astronaut tries to survive on Mars.",
+            posterRes = 0
+        )
+    )
+
+    MaterialTheme {
+        FavoritesScreen(
+            movies = sampleMovies,
+            onMovieClick = {},
+            onFavoriteClick = {}
+        )
     }
 }
