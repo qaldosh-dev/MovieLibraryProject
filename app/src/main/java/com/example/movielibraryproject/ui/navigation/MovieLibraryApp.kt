@@ -1,6 +1,11 @@
 package com.example.movielibraryproject.ui.navigation
 
 import android.net.Uri
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
@@ -26,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,6 +48,7 @@ import com.example.movielibraryproject.ui.screens.CatalogScreen
 import com.example.movielibraryproject.ui.screens.DetailsScreen
 import com.example.movielibraryproject.ui.screens.FavoritesScreen
 import com.example.movielibraryproject.ui.screens.GenresScreen
+import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 import com.example.movielibraryproject.viewmodel.MovieViewModel
 
 private const val CatalogRoute = "catalog?genre={genre}"
@@ -67,6 +75,7 @@ fun MovieLibraryApp() {
         }
     )
     Scaffold(
+        contentWindowInsets = WindowInsets.safeDrawing,
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             MovieTopBar(
@@ -87,7 +96,9 @@ fun MovieLibraryApp() {
         NavHost(
             navController = navController,
             startDestination = CatalogRoute,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
         ) {
             composable(
                 route = CatalogRoute,
@@ -166,6 +177,7 @@ private fun MovieTopBar(
     onBackClick: () -> Unit
 ) {
     TopAppBar(
+        windowInsets = TopAppBarDefaults.windowInsets,
         title = {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -226,6 +238,7 @@ private fun MovieBottomBar(
         Triple(FavoritesRoute, R.string.navigation_favorites, R.drawable.ic_nav_favorites)
     )
     NavigationBar(
+        windowInsets = NavigationBarDefaults.windowInsets,
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
         tonalElevation = 0.dp
@@ -279,4 +292,72 @@ private fun NavHostController.openMainSection(route: String) {
             launchSingleTop = true
         }
     }
+}
+
+@Composable
+private fun MovieNavigationPreview(
+    darkTheme: Boolean,
+    currentRoute: String,
+    showBack: Boolean = false
+) {
+    MovieLibraryProjectTheme(darkTheme = darkTheme, dynamicColor = false) {
+        val isDetails = currentRoute == DetailsRoute
+        val title = stringResource(
+            when (currentRoute) {
+                GenresRoute -> R.string.navigation_genres
+                FavoritesRoute -> R.string.navigation_favorites
+                DetailsRoute -> R.string.navigation_details
+                else -> R.string.navigation_catalog
+            }
+        )
+        Scaffold(
+            contentWindowInsets = WindowInsets.safeDrawing,
+            containerColor = MaterialTheme.colorScheme.background,
+            topBar = {
+                MovieTopBar(title = title, showBack = showBack, onBackClick = {})
+            },
+            bottomBar = {
+                if (!isDetails) {
+                    MovieBottomBar(currentRoute = currentRoute, onSectionClick = {})
+                }
+            }
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .consumeWindowInsets(innerPadding)
+            )
+        }
+    }
+}
+
+@Preview(name = "Navigation light", showBackground = true, showSystemUi = true)
+@Composable
+private fun NavigationLightPreview() {
+    MovieNavigationPreview(darkTheme = false, currentRoute = CatalogRoute)
+}
+
+@Preview(name = "Navigation dark", showBackground = true, showSystemUi = true)
+@Composable
+private fun NavigationDarkPreview() {
+    MovieNavigationPreview(darkTheme = true, currentRoute = FavoritesRoute)
+}
+
+@Preview(name = "Genres light", showBackground = true, showSystemUi = true)
+@Composable
+private fun GenresNavigationPreview() {
+    MovieNavigationPreview(darkTheme = false, currentRoute = GenresRoute)
+}
+
+@Preview(name = "Details light", showBackground = true, showSystemUi = true)
+@Composable
+private fun DetailsNavigationLightPreview() {
+    MovieNavigationPreview(darkTheme = false, currentRoute = DetailsRoute, showBack = true)
+}
+
+@Preview(name = "Details dark", showBackground = true, showSystemUi = true)
+@Composable
+private fun DetailsNavigationDarkPreview() {
+    MovieNavigationPreview(darkTheme = true, currentRoute = DetailsRoute, showBack = true)
 }
