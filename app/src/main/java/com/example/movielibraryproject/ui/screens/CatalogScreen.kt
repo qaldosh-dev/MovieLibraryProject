@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.movielibraryproject.data.MovieRepository
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -43,97 +44,160 @@ fun CatalogScreen(
     onFavoriteClick: (Int) -> Unit,
     onClearGenre: () -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+    val movies = uiState.filteredMovies
+    val selectedGenre = uiState.selectedGenre
+    val featuredMovie = uiState.movies.firstOrNull()
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(
-            text = stringResource(R.string.catalog_title),
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-
-        Text(
-            text = stringResource(R.string.catalog_subtitle),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-
-        OutlinedTextField(
-            value = uiState.searchQuery,
-            onValueChange = onQueryChange,
-            label = {
+        item(key = "catalog_heading") {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Text(
-                    text = stringResource(R.string.catalog_search_label)
+                    text = stringResource(R.string.catalog_title),
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
-            },
-            placeholder = {
+
                 Text(
-                    text = stringResource(R.string.catalog_search_placeholder)
-                )
-            },
-            trailingIcon = {
-                if (uiState.searchQuery.isNotEmpty()) {
-                    TextButton(
-                        onClick = {
-                            onQueryChange("")
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.catalog_clear_search)
-                        )
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.large,
-            singleLine = true
-        )
-
-        val selectedGenre = uiState.selectedGenre
-
-        if (selectedGenre != null) {
-            Text(
-                text = stringResource(
-                    R.string.catalog_selected_genre,
-                    selectedGenre
-                ),
-                style = MaterialTheme.typography.titleMedium
-            )
-
-            TextButton(onClick = onClearGenre) {
-                Text(
-                    text = stringResource(R.string.catalog_clear_genre)
+                    text = stringResource(R.string.catalog_subtitle),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
 
-        val movies = uiState.filteredMovies
+        item(key = "catalog_search") {
+            OutlinedTextField(
+                value = uiState.searchQuery,
+                onValueChange = onQueryChange,
+                label = {
+                    Text(
+                        text = stringResource(R.string.catalog_search_label)
+                    )
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(
+                            R.string.catalog_search_placeholder
+                        )
+                    )
+                },
+                trailingIcon = {
+                    if (uiState.searchQuery.isNotEmpty()) {
+                        TextButton(
+                            onClick = { onQueryChange("") }
+                        ) {
+                            Text(
+                                text = stringResource(
+                                    R.string.catalog_clear_search
+                                )
+                            )
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.large,
+                singleLine = true
+            )
+        }
 
+        if (selectedGenre != null) {
+            item(key = "catalog_genre") {
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(
+                        modifier = Modifier.padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = stringResource(
+                                R.string.catalog_selected_genre,
+                                selectedGenre
+                            ),
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        TextButton(onClick = onClearGenre) {
+                            Text(
+                                text = stringResource(
+                                    R.string.catalog_clear_genre
+                                )
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
+        if (
+            uiState.searchQuery.isBlank() &&
+            selectedGenre == null &&
+            featuredMovie != null
+        ) {
+            item(key = "featured_movie") {
+                FeaturedMovieCard(
+                    movie = featuredMovie,
+                    onClick = { onMovieClick(featuredMovie.id) }
+                )
+            }
+        }
+
+        item(key = "results_heading") {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = stringResource(
+                        if (
+                            uiState.searchQuery.isBlank() &&
+                            selectedGenre == null
+                        ) {
+                            R.string.catalog_all_movies
+                        } else {
+                            R.string.catalog_search_results
+                        }
+                    ),
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Text(
+                    text = pluralStringResource(
+                        R.plurals.catalog_results_count,
+                        movies.size,
+                        movies.size
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
 
         if (movies.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
+            item(key = "catalog_empty") {
                 Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.catalog_no_results),
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center
                     )
 
                     Text(
                         text = stringResource(
                             if (
                                 uiState.searchQuery.isNotEmpty() ||
-                                uiState.selectedGenre != null
+                                selectedGenre != null
                             ) {
                                 R.string.catalog_no_results_hint
                             } else {
@@ -147,86 +211,28 @@ fun CatalogScreen(
 
                     if (uiState.searchQuery.isNotEmpty()) {
                         TextButton(
-                            onClick = {
-                                onQueryChange("")
-                            }
+                            onClick = { onQueryChange("") }
                         ) {
                             Text(
-                                text = stringResource(R.string.catalog_clear_search)
+                                text = stringResource(
+                                    R.string.catalog_clear_search
+                                )
                             )
                         }
                     }
                 }
             }
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                val featuredMovie = uiState.movies.firstOrNull()
-
-                if (
-                    uiState.searchQuery.isBlank() &&
-                    uiState.selectedGenre == null &&
-                    featuredMovie != null
-                ) {
-                    item(key = "featured_movie") {
-                        FeaturedMovieCard(
-                            movie = featuredMovie,
-                            onClick = {
-                                onMovieClick(featuredMovie.id)
-                            }
-                        )
-                    }
-                }
-
-                item(key = "results_heading") {
-                    Column(
-                        verticalArrangement = Arrangement.spacedBy(4.dp)
-                    ) {
-                        Text(
-                            text = stringResource(
-                                if (
-                                    uiState.searchQuery.isBlank() &&
-                                    uiState.selectedGenre == null
-                                ) {
-                                    R.string.catalog_all_movies
-                                } else {
-                                    R.string.catalog_search_results
-                                }
-                            ),
-                            style = MaterialTheme.typography.titleLarge
-                        )
-
-                        Text(
-                            text = pluralStringResource(
-                                R.plurals.catalog_results_count,
-                                movies.size,
-                                movies.size
-                            ),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-
-                items(
-                    items = movies,
-                    key = { movie -> movie.id }
-                ) { movie ->
-                    MovieCard(
-                        movie = movie,
-                        isFavorite = movie.id in uiState.favoriteIds,
-                        onMovieClick = {
-                            onMovieClick(movie.id)
-                        },
-                        onFavoriteClick = {
-                            onFavoriteClick(movie.id)
-                        }
-                    )
-                }
+            items(
+                items = movies,
+                key = { movie -> movie.id }
+            ) { movie ->
+                MovieCard(
+                    movie = movie,
+                    isFavorite = movie.id in uiState.favoriteIds,
+                    onMovieClick = { onMovieClick(movie.id) },
+                    onFavoriteClick = { onFavoriteClick(movie.id) }
+                )
             }
         }
     }
