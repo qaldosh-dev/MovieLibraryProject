@@ -96,15 +96,6 @@ fun CatalogScreen(
 
         val movies = uiState.filteredMovies
 
-        Text(
-            text = pluralStringResource(
-                R.plurals.catalog_results_count,
-                movies.size,
-                movies.size
-            ),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
 
         if (movies.isEmpty()) {
             Box(
@@ -138,6 +129,36 @@ fun CatalogScreen(
                             onClick = {
                                 onMovieClick(featuredMovie.id)
                             }
+                        )
+                    }
+                }
+
+                item(key = "results_heading") {
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Text(
+                            text = stringResource(
+                                if (
+                                    uiState.searchQuery.isBlank() &&
+                                    uiState.selectedGenre == null
+                                ) {
+                                    R.string.catalog_all_movies
+                                } else {
+                                    R.string.catalog_search_results
+                                }
+                            ),
+                            style = MaterialTheme.typography.titleLarge
+                        )
+
+                        Text(
+                            text = pluralStringResource(
+                                R.plurals.catalog_results_count,
+                                movies.size,
+                                movies.size
+                            ),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
