@@ -153,3 +153,54 @@ private fun GenresLightPreview() {
 private fun GenresDarkPreview() {
     GenresPreviewContent(darkTheme = true)
 }
+
+@Preview(
+    name = "Genres compact large font",
+    showBackground = true,
+    widthDp = 320,
+    heightDp = 480,
+    fontScale = 1.5f
+)
+@Composable
+private fun GenresLargeFontPreview() {
+    GenresPreviewContent(darkTheme = false)
+}
+
+@Preview(
+    name = "Genres landscape large font",
+    showBackground = true,
+    widthDp = 640,
+    heightDp = 360,
+    fontScale = 1.5f
+)
+@Composable
+private fun GenresLandscapePreview() {
+    GenresPreviewContent(darkTheme = true)
+}
+
+@Preview(
+    name = "Unknown genre",
+    showBackground = true,
+    widthDp = 320,
+    heightDp = 480,
+    fontScale = 1.5f
+)
+@Composable
+private fun GenresUnknownPreview() {
+    GenresPreviewContent(
+        darkTheme = false,
+        genres = listOf("Documentary and Independent Cinema")
+    )
+}
+
+@Preview(name = "Empty genres light", showBackground = true, widthDp = 360, heightDp = 640)
+@Composable
+private fun GenresEmptyLightPreview() {
+    GenresPreviewContent(darkTheme = false, genres = emptyList())
+}
+
+@Preview(name = "Empty genres dark", showBackground = true, widthDp = 360, heightDp = 640)
+@Composable
+private fun GenresEmptyDarkPreview() {
+    GenresPreviewContent(darkTheme = true, genres = emptyList())
+}
