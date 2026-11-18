@@ -38,6 +38,18 @@ fun CatalogScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        Text(
+            text = stringResource(R.string.catalog_title),
+            style = MaterialTheme.typography.headlineLarge,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Text(
+            text = stringResource(R.string.catalog_subtitle),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
         OutlinedTextField(
             value = uiState.searchQuery,
             onValueChange = onQueryChange,
@@ -46,7 +58,13 @@ fun CatalogScreen(
                     text = stringResource(R.string.catalog_search_label)
                 )
             },
+            placeholder = {
+                Text(
+                    text = stringResource(R.string.catalog_search_placeholder)
+                )
+            },
             modifier = Modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.large,
             singleLine = true
         )
 
