@@ -33,6 +33,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.movielibraryproject.model.Movie
 import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.text.style.TextAlign
+
 @Composable
 fun CatalogScreen(
     uiState: MovieUiState,
@@ -118,10 +120,43 @@ fun CatalogScreen(
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = stringResource(R.string.catalog_no_results),
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.catalog_no_results),
+                        style = MaterialTheme.typography.titleLarge
+                    )
+
+                    Text(
+                        text = stringResource(
+                            if (
+                                uiState.searchQuery.isNotEmpty() ||
+                                uiState.selectedGenre != null
+                            ) {
+                                R.string.catalog_no_results_hint
+                            } else {
+                                R.string.catalog_empty_library_hint
+                            }
+                        ),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+
+                    if (uiState.searchQuery.isNotEmpty()) {
+                        TextButton(
+                            onClick = {
+                                onQueryChange("")
+                            }
+                        ) {
+                            Text(
+                                text = stringResource(R.string.catalog_clear_search)
+                            )
+                        }
+                    }
+                }
             }
         } else {
             LazyColumn(
