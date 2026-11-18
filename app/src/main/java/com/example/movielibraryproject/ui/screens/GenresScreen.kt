@@ -130,15 +130,26 @@ private fun GenreCard(genre: String, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun GenresScreenPreview() {
-    MovieLibraryProjectTheme {
-        Surface {
-            GenresScreen(
-                genres = listOf("Science Fiction", "Drama", "Comedy"),
-                onGenreClick = {}
-            )
+private fun GenresPreviewContent(
+    darkTheme: Boolean,
+    genres: List<String> = listOf("Science Fiction", "Drama", "Comedy")
+) {
+    MovieLibraryProjectTheme(darkTheme = darkTheme, dynamicColor = false) {
+        Surface(color = MaterialTheme.colorScheme.background) {
+            GenresScreen(genres = genres, onGenreClick = {})
         }
     }
+}
+
+@Preview(name = "Genres light", showBackground = true, widthDp = 360, heightDp = 800)
+@Composable
+private fun GenresLightPreview() {
+    GenresPreviewContent(darkTheme = false)
+}
+
+@Preview(name = "Genres dark", showBackground = true, widthDp = 360, heightDp = 800)
+@Composable
+private fun GenresDarkPreview() {
+    GenresPreviewContent(darkTheme = true)
 }
