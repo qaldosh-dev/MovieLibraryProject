@@ -105,8 +105,8 @@ private fun GenreCard(genre: String, onClick: () -> Unit) {
                     .background(
                         Brush.verticalGradient(
                             colors = listOf(
-                                Color.Black.copy(alpha = 0.2f),
-                                Color.Black.copy(alpha = 0.85f)
+                                Color.Black.copy(alpha = 0.6f),
+                                Color.Black.copy(alpha = 0.88f)
                             )
                         )
                     )
