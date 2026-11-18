@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.Surface
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.movielibraryproject.model.Movie
@@ -248,15 +249,26 @@ private fun FeaturedMovieCard(
 }
 
 @Composable
-private fun CatalogPreviewContent(uiState: MovieUiState) {
-    MovieLibraryProjectTheme {
-        CatalogScreen(
-            uiState = uiState,
-            onQueryChange = {},
-            onMovieClick = {},
-            onFavoriteClick = {},
-            onClearGenre = {}
-        )
+private fun CatalogPreviewContent(
+    uiState: MovieUiState,
+    darkTheme: Boolean = false
+) {
+    MovieLibraryProjectTheme(
+        darkTheme = darkTheme,
+        dynamicColor = false
+    ) {
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background
+        ) {
+            CatalogScreen(
+                uiState = uiState,
+                onQueryChange = {},
+                onMovieClick = {},
+                onFavoriteClick = {},
+                onClearGenre = {}
+            )
+        }
     }
 }
 
@@ -292,6 +304,37 @@ private fun CatalogNoResultsPreview() {
             movies = MovieRepository.movies,
             genres = MovieRepository.genres,
             searchQuery = "unknown movie"
+        )
+    )
+}
+
+@Preview(
+    name = "Catalog - Dark",
+    showBackground = true
+)
+@Composable
+private fun CatalogDarkPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(
+            movies = MovieRepository.movies,
+            genres = MovieRepository.genres,
+            favoriteIds = setOf(1)
+        ),
+        darkTheme = true
+    )
+}
+
+@Preview(
+    name = "Catalog - Search",
+    showBackground = true
+)
+@Composable
+private fun CatalogSearchPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(
+            movies = MovieRepository.movies,
+            genres = MovieRepository.genres,
+            searchQuery = "inter"
         )
     )
 }
