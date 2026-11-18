@@ -7,4 +7,8 @@
     <string name="catalog_selected_genre">Genre: %1$s</string>
     <string name="catalog_clear_genre">Clear genre filter</string>
     <string name="catalog_no_results">No movies found</string>
+    <string name="catalog_featured">Tonight’s pick</string>
+    <string name="catalog_movie_info">%1$d · %2$s</string>
+    <string name="catalog_rating">★ %1$.1f / 10</string>
+    <string name="catalog_poster_description">Poster of %1$s</string>
 </resources>
