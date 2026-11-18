@@ -31,6 +31,7 @@ import androidx.compose.material3.Card
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.movielibraryproject.model.Movie
+import androidx.compose.ui.res.pluralStringResource
 @Composable
 fun CatalogScreen(
     uiState: MovieUiState,
@@ -94,6 +95,16 @@ fun CatalogScreen(
         }
 
         val movies = uiState.filteredMovies
+
+        Text(
+            text = pluralStringResource(
+                R.plurals.catalog_results_count,
+                movies.size,
+                movies.size
+            ),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
 
         if (movies.isEmpty()) {
             Box(

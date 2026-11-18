@@ -11,4 +11,8 @@
     <string name="catalog_movie_info">%1$d · %2$s</string>
     <string name="catalog_rating">★ %1$.1f / 10</string>
     <string name="catalog_poster_description">Poster of %1$s</string>
+    <plurals name="catalog_results_count">
+        <item quantity="one">%1$d movie</item>
+        <item quantity="other">%1$d movies</item>
+    </plurals>
 </resources>
