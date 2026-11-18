@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.movielibraryproject.R
@@ -38,6 +42,21 @@ fun GenresScreen(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
+        item {
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(
+                    text = stringResource(R.string.genres_title),
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onBackground,
+                    modifier = Modifier.semantics { heading() }
+                )
+                Text(
+                    text = stringResource(R.string.genres_intro),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
         items(genres) { genre ->
             GenreCard(genre = genre, onClick = { onGenreClick(genre) })
         }
@@ -51,6 +70,13 @@ private fun GenreCard(genre: String, onClick: () -> Unit) {
         "Drama" -> R.drawable.poster_the_truman_show
         "Comedy" -> R.drawable.poster_paddington
         else -> null
+    }
+
+    val subtitleRes = when (genre) {
+        "Science Fiction" -> R.string.genres_science_fiction_subtitle
+        "Drama" -> R.string.genres_drama_subtitle
+        "Comedy" -> R.string.genres_comedy_subtitle
+        else -> R.string.genres_other_subtitle
     }
 
     Card(
@@ -85,12 +111,21 @@ private fun GenreCard(genre: String, onClick: () -> Unit) {
                         )
                     )
             )
-            Text(
-                text = genre,
+            Column(
                 modifier = Modifier.padding(24.dp),
-                style = MaterialTheme.typography.headlineSmall,
-                color = Color.White
-            )
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Text(
+                    text = genre,
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = Color.White
+                )
+                Text(
+                    text = stringResource(subtitleRes),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.White
+                )
+            }
         }
     }
 }
