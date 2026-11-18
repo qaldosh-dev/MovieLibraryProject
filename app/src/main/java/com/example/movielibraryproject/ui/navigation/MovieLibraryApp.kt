@@ -16,7 +16,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -124,12 +123,7 @@ fun MovieLibraryApp() {
                     },
                     onFavoriteClick = movieViewModel::toggleFavorite,
                     onClearGenre = {
-                        navController.navigate("catalog") {
-                            popUpTo(navController.graph.findStartDestination().id) {
-                                inclusive = true
-                            }
-                            launchSingleTop = true
-                        }
+                        navController.openMainSection("catalog")
                     }
                 )
             }
@@ -175,8 +169,15 @@ fun MovieLibraryApp() {
 }
 
 private fun NavHostController.openMainSection(route: String) {
-    navigate(route) {
-        popUpTo(graph.findStartDestination().id)
+    navigate("catalog") {
+        popUpTo(graph.id) {
+            inclusive = false
+        }
         launchSingleTop = true
+    }
+    if (route != "catalog") {
+        navigate(route) {
+            launchSingleTop = true
+        }
     }
 }
