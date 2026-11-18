@@ -13,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -65,13 +66,8 @@ fun MovieLibraryApp() {
             else -> R.string.navigation_catalog
         }
     )
-    val bottomDestinations = listOf(
-        "catalog" to R.string.navigation_catalog,
-        GenresRoute to R.string.navigation_genres,
-        FavoritesRoute to R.string.navigation_favorites
-    )
-
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             MovieTopBar(
                 title = title,
@@ -81,22 +77,10 @@ fun MovieLibraryApp() {
         },
         bottomBar = {
             if (!isDetails) {
-                NavigationBar {
-                    bottomDestinations.forEach { (route, labelRes) ->
-                        val label = stringResource(labelRes)
-                        val selected = if (route == "catalog") {
-                            currentRoute == CatalogRoute
-                        } else {
-                            currentRoute == route
-                        }
-                        NavigationBarItem(
-                            selected = selected,
-                            onClick = { navController.openMainSection(route) },
-                            icon = { Text(label.take(1)) },
-                            label = { Text(label) }
-                        )
-                    }
-                }
+                MovieBottomBar(
+                    currentRoute = currentRoute,
+                    onSectionClick = { navController.openMainSection(it) }
+                )
             }
         }
     ) { innerPadding ->
@@ -229,6 +213,58 @@ private fun MovieTopBar(
             navigationIconContentColor = MaterialTheme.colorScheme.primary
         )
     )
+}
+
+@Composable
+private fun MovieBottomBar(
+    currentRoute: String?,
+    onSectionClick: (String) -> Unit
+) {
+    val destinations = listOf(
+        Triple("catalog", R.string.navigation_catalog, R.drawable.ic_nav_catalog),
+        Triple(GenresRoute, R.string.navigation_genres, R.drawable.ic_nav_genres),
+        Triple(FavoritesRoute, R.string.navigation_favorites, R.drawable.ic_nav_favorites)
+    )
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
+        tonalElevation = 0.dp
+    ) {
+        destinations.forEach { (route, labelRes, iconRes) ->
+            val label = stringResource(labelRes)
+            val selected = if (route == "catalog") {
+                currentRoute == CatalogRoute
+            } else {
+                currentRoute == route
+            }
+            NavigationBarItem(
+                selected = selected,
+                onClick = { onSectionClick(route) },
+                modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp),
+                icon = {
+                    Icon(
+                        painter = painterResource(iconRes),
+                        contentDescription = null
+                    )
+                },
+                label = {
+                    Text(
+                        text = label,
+                        style = MaterialTheme.typography.labelMedium,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                },
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            )
+        }
+    }
 }
 
 private fun NavHostController.openMainSection(route: String) {
