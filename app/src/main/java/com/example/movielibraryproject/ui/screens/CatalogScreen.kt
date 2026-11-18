@@ -392,3 +392,37 @@ private fun CatalogSearchPreview() {
         )
     )
 }
+@Preview(
+    name = "Catalog - Small screen",
+    showBackground = true,
+    widthDp = 320,
+    heightDp = 480
+)
+@Composable
+private fun CatalogSmallScreenPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(
+            movies = MovieRepository.movies,
+            genres = MovieRepository.genres
+        )
+    )
+}
+
+@Preview(
+    name = "Catalog - Large font",
+    showBackground = true,
+    widthDp = 360,
+    heightDp = 640,
+    fontScale = 1.5f
+)
+@Composable
+private fun CatalogLargeFontPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(
+            movies = MovieRepository.movies,
+            genres = MovieRepository.genres,
+            selectedGenre = "Comedy",
+            searchQuery = "zzzz"
+        )
+    )
+}
