@@ -13,6 +13,7 @@
     <string name="catalog_poster_description">Poster of %1$s</string>
     <string name="catalog_all_movies">All movies</string>
     <string name="catalog_search_results">Results</string>
+    <string name="catalog_clear_search">Clear</string>
     <plurals name="catalog_results_count">
         <item quantity="one">%1$d movie</item>
         <item quantity="other">%1$d movies</item>

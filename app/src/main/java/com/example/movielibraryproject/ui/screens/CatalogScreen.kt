@@ -72,6 +72,19 @@ fun CatalogScreen(
                     text = stringResource(R.string.catalog_search_placeholder)
                 )
             },
+            trailingIcon = {
+                if (uiState.searchQuery.isNotEmpty()) {
+                    TextButton(
+                        onClick = {
+                            onQueryChange("")
+                        }
+                    ) {
+                        Text(
+                            text = stringResource(R.string.catalog_clear_search)
+                        )
+                    }
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.large,
             singleLine = true
