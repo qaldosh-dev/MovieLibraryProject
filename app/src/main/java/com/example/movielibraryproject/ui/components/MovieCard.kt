@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import com.example.movielibraryproject.R
 import com.example.movielibraryproject.model.Movie
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Density
 
 @Composable
 fun MovieCard(
@@ -221,5 +224,28 @@ private fun MovieCardDarkPreview() {
             onMovieClick = {},
             onFavoriteClick = {}
         )
+    }
+}
+@Preview(
+    showBackground = true,
+    name = "Large Font Movie Card",
+    widthDp = 360
+)
+@Composable
+private fun LargeFontMovieCardPreview() {
+    MovieLibraryProjectTheme {
+        CompositionLocalProvider(
+            LocalDensity provides Density(
+                density = LocalDensity.current.density,
+                fontScale = 1.5f
+            )
+        ) {
+            MovieCard(
+                movie = previewMovie,
+                isFavorite = false,
+                onMovieClick = {},
+                onFavoriteClick = {}
+            )
+        }
     }
 }
