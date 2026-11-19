@@ -52,7 +52,7 @@ fun DetailsScreen(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Image(
             painter = painterResource(movie.posterRes),
@@ -68,36 +68,38 @@ fun DetailsScreen(
             contentScale = ContentScale.Fit
         )
 
-        Text(
-            text = movie.genre,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
-
-        Text(
-            text = movie.title,
-            style = MaterialTheme.typography.headlineMedium
-        )
-
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(
-                text = stringResource(
-                    R.string.details_rating,
-                    movie.rating
-                ),
-                style = MaterialTheme.typography.titleMedium
+                text = movie.genre,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary
             )
 
             Text(
-                text = stringResource(
-                    R.string.details_year,
-                    movie.year
-                ),
-                style = MaterialTheme.typography.bodyMedium
+                text = movie.title,
+                style = MaterialTheme.typography.headlineMedium
             )
+
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(
+                        R.string.details_rating,
+                        movie.rating
+                    ),
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Text(
+                    text = stringResource(
+                        R.string.details_year,
+                        movie.year
+                    ),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
         }
 
 
