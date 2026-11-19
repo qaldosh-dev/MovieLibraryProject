@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -24,6 +24,8 @@ import com.example.movielibraryproject.R
 import com.example.movielibraryproject.model.Movie
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.widthIn
 
 @Composable
 fun DetailsScreen(
@@ -57,8 +59,10 @@ fun DetailsScreen(
                 movie.title
             ),
             modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .widthIn(max = 240.dp)
                 .fillMaxWidth()
-                .height(300.dp),
+                .aspectRatio(2f / 3f),
             contentScale = ContentScale.Fit
         )
 
