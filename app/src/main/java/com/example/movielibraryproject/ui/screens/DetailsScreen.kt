@@ -178,3 +178,19 @@ private fun DetailsScreenNotFoundPreview() {
     }
 }
 
+private val longTextMovie = previewMovie.copy(
+    title = "The Extraordinarily Long Title of a Very Famous Science Fiction Movie",
+    description = "A pilot travels to distant stars to find a new home for humanity. ".repeat(12)
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailsScreenLongTextPreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = longTextMovie,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
