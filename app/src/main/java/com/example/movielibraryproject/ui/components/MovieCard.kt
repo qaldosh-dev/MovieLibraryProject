@@ -55,7 +55,8 @@ fun MovieCard(
                 Image(
                     painter = painterResource(movie.posterRes),
                     contentDescription = stringResource(
-                        R.string.movie_card_poster_description
+                        R.string.movie_card_poster_description,
+                        movie.title
                     ),
                     modifier = Modifier
                         .size(width = 84.dp, height = 126.dp)
@@ -131,7 +132,11 @@ fun MovieCard(
                         Icons.Filled.FavoriteBorder
                     },
                     contentDescription = stringResource(
-                        R.string.movie_card_poster_description,
+                        if (isFavorite) {
+                            R.string.movie_card_remove
+                        } else {
+                            R.string.movie_card_save
+                        },
                         movie.title
                     ),
                     tint = if (isFavorite) {
