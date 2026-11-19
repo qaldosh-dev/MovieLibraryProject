@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="favorites_title">My Favorites</string>
+    <string name="favorites_subtitle">Your personal movie collection</string>
+
     <string name="favorites_empty_title">Your favorites list is empty</string>
-    <string name="favorites_empty_message">Add movies to your favorites to see them here.</string>
+    <string name="favorites_empty_message">Movies you add to your favorites will appear here. Tap the heart icon on any movie to save it.</string>
+
+    <plurals name="favorites_movie_count">
+        <item quantity="one">%d movie</item>
+        <item quantity="other">%d movies</item>
+    </plurals>
 </resources>
