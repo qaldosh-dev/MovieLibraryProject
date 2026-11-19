@@ -219,3 +219,27 @@ private fun DetailsScreenDarkFavoritePreview() {
         )
     }
 }
+
+@Preview(showBackground = true, fontScale = 2f)
+@Composable
+private fun DetailsScreenLargeFontPreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, widthDp = 640, heightDp = 360)
+@Composable
+private fun DetailsScreenLandscapePreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
