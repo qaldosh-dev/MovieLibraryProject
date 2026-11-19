@@ -67,6 +67,12 @@ fun DetailsScreen(
         )
 
         Text(
+            text = movie.genre,
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.primary
+        )
+
+        Text(
             text = movie.title,
             style = MaterialTheme.typography.headlineMedium
         )
@@ -79,13 +85,6 @@ fun DetailsScreen(
             style = MaterialTheme.typography.bodyMedium
         )
 
-        Text(
-            text = stringResource(
-                R.string.details_genre,
-                movie.genre
-            ),
-            style = MaterialTheme.typography.bodyMedium
-        )
 
         Text(
             text = stringResource(
