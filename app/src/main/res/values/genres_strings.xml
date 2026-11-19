@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="genres_title">Explore genres</string>
+    <string name="genres_intro">Find a story for every mood.</string>
+    <string name="genres_science_fiction_subtitle">Beyond Earth. Beyond imagination.</string>
+    <string name="genres_drama_subtitle">Human stories that stay with you.</string>
+    <string name="genres_comedy_subtitle">A little laughter, a brighter day.</string>
+    <string name="genres_other_subtitle">Discover more stories.</string>
+</resources>
