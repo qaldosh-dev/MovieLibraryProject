@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.OutlinedButton
+import android.content.res.Configuration
 
 @Composable
 fun DetailsScreen(
@@ -190,6 +191,30 @@ private fun DetailsScreenLongTextPreview() {
         DetailsScreen(
             movie = longTextMovie,
             isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun DetailsScreenDarkPreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = false,
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun DetailsScreenDarkFavoritePreview() {
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = true,
             onFavoriteClick = {}
         )
     }
