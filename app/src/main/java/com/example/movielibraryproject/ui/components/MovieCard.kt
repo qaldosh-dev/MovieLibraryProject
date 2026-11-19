@@ -123,11 +123,7 @@ fun MovieCard(
                         Icons.Filled.FavoriteBorder
                     },
                     contentDescription = stringResource(
-                        if (isFavorite) {
-                            R.string.movie_card_remove
-                        } else {
-                            R.string.movie_card_save
-                        },
+                        R.string.movie_card_poster_description,
                         movie.title
                     ),
                     tint = if (isFavorite) {
