@@ -198,3 +198,28 @@ private fun NarrowMovieCardPreview() {
         )
     }
 }
+@Preview(showBackground = true, name = "Movie Card - Light Theme")
+@Composable
+private fun MovieCardLightPreview() {
+    MovieLibraryProjectTheme(darkTheme = false) {
+        MovieCard(
+            movie = previewMovie,
+            isFavorite = false,
+            onMovieClick = {},
+            onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Movie Card - Dark Theme")
+@Composable
+private fun MovieCardDarkPreview() {
+    MovieLibraryProjectTheme(darkTheme = true) {
+        MovieCard(
+            movie = previewMovie,
+            isFavorite = true,
+            onMovieClick = {},
+            onFavoriteClick = {}
+        )
+    }
+}
