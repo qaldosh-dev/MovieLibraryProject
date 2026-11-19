@@ -99,17 +99,22 @@ fun MovieCard(
 
                 Spacer(Modifier.height(6.dp))
 
-                Text(
-                    text = movie.year.toString(),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        text = movie.year.toString(),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
 
-                Text(
-                    text = "★ ${movie.rating}/10",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
+                    Text(
+                        text = "★ ${movie.rating}/10",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             }
 
             IconButton(
@@ -173,6 +178,23 @@ private fun LongMovieTitlePreview() {
             isFavorite = false,
             onMovieClick = {},
             onFavoriteClick = {}
+        )
+    }
+}
+@Preview(
+    showBackground = true,
+    name = "Narrow Movie Card",
+    widthDp = 320
+)
+@Composable
+private fun NarrowMovieCardPreview() {
+    MovieLibraryProjectTheme {
+        MovieCard(
+            movie = previewMovie,
+            isFavorite = false,
+            onMovieClick = {},
+            onFavoriteClick = {},
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }
