@@ -5,4 +5,5 @@
     <string name="navigation_favorites">Favorites</string>
     <string name="navigation_details">Movie details</string>
     <string name="navigation_back">Back</string>
+    <string name="navigation_app_title">Movie Library</string>
 </resources>
