@@ -25,7 +25,6 @@ import com.example.movielibraryproject.model.Movie
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.OutlinedButton
 import android.content.res.Configuration
