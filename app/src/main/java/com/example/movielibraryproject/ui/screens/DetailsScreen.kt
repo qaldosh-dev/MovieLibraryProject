@@ -26,6 +26,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.OutlinedButton
 
 @Composable
 fun DetailsScreen(
@@ -77,41 +79,46 @@ fun DetailsScreen(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        Text(
-            text = stringResource(
-                R.string.details_year,
-                movie.year
-            ),
-            style = MaterialTheme.typography.bodyMedium
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(
+                    R.string.details_rating,
+                    movie.rating
+                ),
+                style = MaterialTheme.typography.titleMedium
+            )
 
-
-        Text(
-            text = stringResource(
-                R.string.details_rating,
-                movie.rating
-            ),
-            style = MaterialTheme.typography.titleMedium
-        )
+            Text(
+                text = stringResource(
+                    R.string.details_year,
+                    movie.year
+                ),
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
 
         Text(
             text = movie.description,
             style = MaterialTheme.typography.bodyLarge
         )
 
-        Button(
-            onClick = onFavoriteClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(
-                    if (isFavorite) {
-                        R.string.details_remove_favorite
-                    } else {
-                        R.string.details_add_favorite
-                    }
-                )
-            )
+        if (isFavorite) {
+            OutlinedButton(
+                onClick = onFavoriteClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(R.string.details_remove_favorite))
+            }
+        } else {
+            Button(
+                onClick = onFavoriteClick,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = stringResource(R.string.details_add_favorite))
+            }
         }
     }
 }
