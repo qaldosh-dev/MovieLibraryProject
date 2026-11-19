@@ -100,10 +100,6 @@ fun DetailsScreen(
             )
         }
 
-        Text(
-            text = movie.description,
-            style = MaterialTheme.typography.bodyLarge
-        )
 
         if (isFavorite) {
             OutlinedButton(
@@ -119,6 +115,17 @@ fun DetailsScreen(
             ) {
                 Text(text = stringResource(R.string.details_add_favorite))
             }
+        }
+
+        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Text(
+                text = stringResource(R.string.details_overview),
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                text = movie.description,
+                style = MaterialTheme.typography.bodyLarge
+            )
         }
     }
 }

@@ -5,5 +5,6 @@
     <string name="details_movie_not_found">Movie not found</string>
     <string name="details_year">Year: %1$d</string>
     <string name="details_rating">Rating: %1$.1f / 10</string>
+    <string name="details_overview">Overview</string>
     <string name="details_poster_description">Poster of %1$s</string>
 </resources>
