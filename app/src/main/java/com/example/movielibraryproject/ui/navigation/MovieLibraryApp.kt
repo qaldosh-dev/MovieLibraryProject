@@ -1,6 +1,14 @@
 package com.example.movielibraryproject.ui.navigation
 
 import android.net.Uri
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -310,6 +318,37 @@ private fun NavHostController.openMovieDetails(movieId: Int, fromFavorites: Bool
     navigate(movieDetailsRoute(movieId, fromFavorites)) {
         launchSingleTop = true
     }
+}
+
+@Composable
+private fun TmdbCreditsDialog(onDismiss: () -> Unit) {
+    val uriHandler = LocalUriHandler.current
+    val tmdbUrl = stringResource(R.string.navigation_tmdb_url)
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.navigation_about_title)) },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Image(
+                    imageVector = TmdbLogo,
+                    contentDescription = stringResource(R.string.navigation_tmdb_logo),
+                    modifier = Modifier.width(144.dp).aspectRatio(273.42f / 35.52f)
+                )
+                Text(stringResource(R.string.navigation_tmdb_attribution))
+                TextButton(onClick = { uriHandler.openUri(tmdbUrl) }) {
+                    Text(stringResource(R.string.navigation_tmdb_website))
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.navigation_close))
+            }
+        }
+    )
 }
 
 private fun NavHostController.openMainSection(route: String) {
