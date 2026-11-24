@@ -7,5 +7,9 @@ data class Movie(
     val genre: String,
     val rating: Double,
     val description: String,
-    val posterRes: Int
+    val posterRes: Int = 0,
+    val releaseDate: String? = null,
+    val genreIds: List<Int> = emptyList(),
+    val genres: List<String> = listOf(genre).filter { it.isNotBlank() },
+    val posterUrl: String? = null
 )
