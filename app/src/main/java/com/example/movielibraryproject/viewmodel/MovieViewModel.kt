@@ -6,6 +6,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import androidx.lifecycle.viewModelScope
+import com.example.movielibraryproject.model.Movie
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.launch
 
 class MovieViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -15,6 +19,34 @@ class MovieViewModel : ViewModel() {
         )
     )
     val uiState: StateFlow<MovieUiState> = _uiState.asStateFlow()
+
+    fun loadCatalog(fetchMovies: suspend () -> List<Movie>) {
+        viewModelScope.launch {
+            if (uiState.value.catalogLoadState == CatalogLoadState.Loading) {
+                return@launch
+            }
+
+            _uiState.update { it.copy(catalogLoadState = CatalogLoadState.Loading) }
+
+            try {
+                val movies = fetchMovies()
+                _uiState.update { state ->
+                    state.copy(
+                        movies = movies,
+                        catalogLoadState = if (movies.isEmpty()) {
+                            CatalogLoadState.Empty
+                        } else {
+                            CatalogLoadState.Success
+                        }
+                    )
+                }
+            } catch (error: CancellationException) {
+                throw error
+            } catch (error: Exception) {
+                _uiState.update { it.copy(catalogLoadState = CatalogLoadState.Error) }
+            }
+        }
+    }
 
     fun onSearchQueryChange(query: String) {
         _uiState.update { state ->
