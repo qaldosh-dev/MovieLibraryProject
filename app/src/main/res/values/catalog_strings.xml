@@ -20,4 +20,6 @@
         <item quantity="one">%1$d movie</item>
         <item quantity="other">%1$d movies</item>
     </plurals>
+    <string name="catalog_load_error">Could not load movies. Check your connection.</string>
+    <string name="catalog_retry">Retry</string>
 </resources>

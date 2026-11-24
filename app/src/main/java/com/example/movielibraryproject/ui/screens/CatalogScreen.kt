@@ -53,7 +53,8 @@ fun CatalogScreen(
     onMovieClick: (Int) -> Unit,
     onFavoriteClick: (Int) -> Unit,
     onClearGenre: () -> Unit,
-    loadState: CatalogLoadState = CatalogLoadState.Success
+    loadState: CatalogLoadState = CatalogLoadState.Success,
+    onRetry: () -> Unit = {}
 ) {
 
     if (loadState == CatalogLoadState.Loading) {
@@ -62,6 +63,25 @@ fun CatalogScreen(
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
+        }
+        return
+    }
+
+    if (loadState == CatalogLoadState.Error) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.catalog_load_error),
+                textAlign = TextAlign.Center
+            )
+            TextButton(onClick = onRetry) {
+                Text(text = stringResource(R.string.catalog_retry))
+            }
         }
         return
     }
