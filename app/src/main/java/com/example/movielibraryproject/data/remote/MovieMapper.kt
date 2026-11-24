@@ -1,6 +1,20 @@
 package com.example.movielibraryproject.data.remote
 
+import com.example.movielibraryproject.model.Movie
+
 class MovieMapper {
+    fun toMovie(dto: MovieDto): Movie {
+        val genres = dto.genreIds.orEmpty()
+            .mapNotNull { genreNames[it] }
+            .distinct()
+        return dto.toMovie(genres = genres)
+    }
+
+    fun getGenres(movies: List<Movie>): List<String> = movies
+        .flatMap { it.genres }
+        .distinct()
+        .sorted()
+
     private val genreNames = mapOf(
         28 to "Action",
         12 to "Adventure",
