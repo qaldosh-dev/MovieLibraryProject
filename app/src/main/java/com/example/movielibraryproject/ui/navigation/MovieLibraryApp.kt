@@ -8,12 +8,16 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.PathParser
+import androidx.compose.ui.platform.LocalUriHandler
+import com.example.movielibraryproject.model.Movie
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -57,7 +61,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movielibraryproject.R
-import com.example.movielibraryproject.model.Movie
 import com.example.movielibraryproject.ui.screens.CatalogScreen
 import com.example.movielibraryproject.ui.screens.DetailsScreen
 import com.example.movielibraryproject.ui.screens.FavoritesScreen
@@ -74,6 +77,7 @@ private const val DetailsRoute = "details/{movieId}?fromFavorites={fromFavorites
 fun MovieLibraryApp() {
     val movieViewModel: MovieViewModel = viewModel()
     val uiState by movieViewModel.uiState.collectAsState()
+    var showCredits by rememberSaveable { mutableStateOf(false) }
     val navController = rememberNavController()
     val currentEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentEntry?.destination?.route
@@ -95,7 +99,8 @@ fun MovieLibraryApp() {
             MovieTopBar(
                 title = title,
                 showBack = isDetails || isFilteredCatalog,
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onAboutClick = { showCredits = true }
             )
         },
         bottomBar = {
@@ -186,6 +191,9 @@ fun MovieLibraryApp() {
             }
         }
     }
+    if (showCredits) {
+        TmdbCreditsDialog(onDismiss = { showCredits = false })
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -193,7 +201,8 @@ fun MovieLibraryApp() {
 private fun MovieTopBar(
     title: String,
     showBack: Boolean,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onAboutClick: () -> Unit
 ) {
     TopAppBar(
         windowInsets = TopAppBarDefaults.windowInsets,
@@ -236,6 +245,14 @@ private fun MovieTopBar(
                         contentDescription = stringResource(R.string.navigation_back)
                     )
                 }
+            }
+        },
+        actions = {
+            TextButton(
+                onClick = onAboutClick,
+                modifier = Modifier.sizeIn(minWidth = 48.dp, minHeight = 48.dp)
+            ) {
+                Text(stringResource(R.string.navigation_about))
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -406,7 +423,7 @@ private fun MovieNavigationPreview(
             contentWindowInsets = WindowInsets.safeDrawing,
             containerColor = MaterialTheme.colorScheme.background,
             topBar = {
-                MovieTopBar(title = title, showBack = showBack, onBackClick = {})
+                MovieTopBar(title = title, showBack = showBack, onBackClick = {}, onAboutClick = {})
             },
             bottomBar = {
                 if (!isDetails) {
