@@ -115,6 +115,7 @@ fun MovieLibraryApp() {
                     movieViewModel.onGenreSelected(genre)
                 }
                 CatalogScreen(
+                    loadState = uiState.catalogLoadState,
                     uiState = uiState.copy(selectedGenre = genre),
                     onQueryChange = movieViewModel::onSearchQueryChange,
                     onMovieClick = { movieId ->

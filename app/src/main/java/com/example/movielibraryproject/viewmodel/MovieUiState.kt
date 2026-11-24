@@ -7,7 +7,8 @@ data class MovieUiState(
     val genres: List<String> = emptyList(),
     val searchQuery: String = "",
     val selectedGenre: String? = null,
-    val favoriteIds: Set<Int> = emptySet()
+    val favoriteIds: Set<Int> = emptySet(),
+    val catalogLoadState: CatalogLoadState = CatalogLoadState.Success
 ) {
     val filteredMovies: List<Movie>
         get() = movies.filter { movie ->

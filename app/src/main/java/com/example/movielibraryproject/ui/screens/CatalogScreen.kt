@@ -40,12 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-enum class CatalogLoadState {
-    Loading,
-    Success,
-    Error,
-    Empty
-}
+import com.example.movielibraryproject.viewmodel.CatalogLoadState
 
 
 @Composable
