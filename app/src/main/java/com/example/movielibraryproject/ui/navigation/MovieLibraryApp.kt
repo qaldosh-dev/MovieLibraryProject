@@ -44,6 +44,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.movielibraryproject.R
+import com.example.movielibraryproject.model.Movie
 import com.example.movielibraryproject.ui.screens.CatalogScreen
 import com.example.movielibraryproject.ui.screens.DetailsScreen
 import com.example.movielibraryproject.ui.screens.FavoritesScreen
@@ -156,7 +157,12 @@ fun MovieLibraryApp() {
                 )
             ) { entry ->
                 val movieId = entry.arguments?.getInt("movieId")
-                val movie = uiState.movies.find { it.id == movieId }
+                val movie = resolveDetailsMovie(
+                    movieId = movieId,
+                    movies = uiState.movies,
+                    favoriteMovies = uiState.favoriteMovies,
+                    fromFavorites = entry.arguments?.getBoolean("fromFavorites") == true
+                )
                 DetailsScreen(
                     movie = movie,
                     isFavorite = movie != null && movie.id in uiState.favoriteIds,
@@ -278,6 +284,18 @@ private fun MovieBottomBar(
             )
         }
     }
+}
+
+internal fun resolveDetailsMovie(
+    movieId: Int?,
+    movies: List<Movie>,
+    favoriteMovies: List<Movie>,
+    fromFavorites: Boolean
+): Movie? {
+    if (movieId == null) return null
+    val catalogMovie = movies.firstOrNull { it.id == movieId }
+    val savedMovie = favoriteMovies.firstOrNull { it.id == movieId }
+    return if (fromFavorites) savedMovie ?: catalogMovie else catalogMovie ?: savedMovie
 }
 
 internal fun movieDetailsRoute(movieId: Int, fromFavorites: Boolean = false): String =
