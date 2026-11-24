@@ -54,7 +54,7 @@ import com.example.movielibraryproject.viewmodel.MovieViewModel
 private const val CatalogRoute = "catalog?genre={genre}"
 private const val GenresRoute = "genres"
 private const val FavoritesRoute = "favorites"
-private const val DetailsRoute = "details/{movieId}"
+private const val DetailsRoute = "details/{movieId}?fromFavorites={fromFavorites}"
 
 @Composable
 fun MovieLibraryApp() {
@@ -118,9 +118,7 @@ fun MovieLibraryApp() {
                     uiState = uiState.copy(selectedGenre = genre),
                     onQueryChange = movieViewModel::onSearchQueryChange,
                     onMovieClick = { movieId ->
-                        navController.navigate("details/$movieId") {
-                            launchSingleTop = true
-                        }
+                        navController.openMovieDetails(movieId)
                     },
                     onFavoriteClick = movieViewModel::toggleFavorite,
                     onClearGenre = {
@@ -142,9 +140,7 @@ fun MovieLibraryApp() {
                 FavoritesScreen(
                     movies = uiState.favoriteMovies,
                     onMovieClick = { movieId ->
-                        navController.navigate("details/$movieId") {
-                            launchSingleTop = true
-                        }
+                        navController.openMovieDetails(movieId, fromFavorites = true)
                     },
                     onFavoriteClick = movieViewModel::toggleFavorite
                 )
@@ -152,7 +148,11 @@ fun MovieLibraryApp() {
             composable(
                 route = DetailsRoute,
                 arguments = listOf(
-                    navArgument("movieId") { type = NavType.IntType }
+                    navArgument("movieId") { type = NavType.IntType },
+                    navArgument("fromFavorites") {
+                        type = NavType.BoolType
+                        defaultValue = false
+                    }
                 )
             ) { entry ->
                 val movieId = entry.arguments?.getInt("movieId")
@@ -277,6 +277,15 @@ private fun MovieBottomBar(
                 )
             )
         }
+    }
+}
+
+internal fun movieDetailsRoute(movieId: Int, fromFavorites: Boolean = false): String =
+    "details/$movieId?fromFavorites=$fromFavorites"
+
+private fun NavHostController.openMovieDetails(movieId: Int, fromFavorites: Boolean = false) {
+    navigate(movieDetailsRoute(movieId, fromFavorites)) {
+        launchSingleTop = true
     }
 }
 
