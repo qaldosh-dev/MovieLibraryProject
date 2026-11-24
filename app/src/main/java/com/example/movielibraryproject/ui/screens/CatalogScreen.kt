@@ -37,6 +37,16 @@ import androidx.compose.ui.res.painterResource
 import com.example.movielibraryproject.model.Movie
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+enum class CatalogLoadState {
+    Loading,
+    Success,
+    Error,
+    Empty
+}
+
 
 @Composable
 fun CatalogScreen(
@@ -44,8 +54,56 @@ fun CatalogScreen(
     onQueryChange: (String) -> Unit,
     onMovieClick: (Int) -> Unit,
     onFavoriteClick: (Int) -> Unit,
-    onClearGenre: () -> Unit
+    onClearGenre: () -> Unit,
+    loadState: CatalogLoadState = CatalogLoadState.Success,
+    onRetry: () -> Unit = {}
 ) {
+
+    if (loadState == CatalogLoadState.Loading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+    if (loadState == CatalogLoadState.Error) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.catalog_load_error),
+                textAlign = TextAlign.Center
+            )
+            TextButton(onClick = onRetry) {
+                Text(text = stringResource(R.string.catalog_retry))
+            }
+        }
+        return
+    }
+
+    if (loadState == CatalogLoadState.Empty) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.catalog_empty),
+                textAlign = TextAlign.Center
+            )
+        }
+        return
+    }
+
+
     val movies = uiState.filteredMovies
     val selectedGenre = uiState.selectedGenre
     val featuredMovie = uiState.movies.firstOrNull()
@@ -313,7 +371,9 @@ private fun FeaturedMovieCard(
 @Composable
 private fun CatalogPreviewContent(
     uiState: MovieUiState,
-    darkTheme: Boolean = false
+    darkTheme: Boolean = false,
+    loadState: CatalogLoadState = CatalogLoadState.Success,
+    onRetry: () -> Unit = {}
 ) {
     MovieLibraryProjectTheme(
         darkTheme = darkTheme,
@@ -328,7 +388,9 @@ private fun CatalogPreviewContent(
                 onQueryChange = {},
                 onMovieClick = {},
                 onFavoriteClick = {},
-                onClearGenre = {}
+                onClearGenre = {},
+                loadState = loadState,
+                onRetry = onRetry
             )
         }
     }
@@ -432,5 +494,35 @@ private fun CatalogLargeFontPreview() {
             selectedGenre = "Comedy",
             searchQuery = "zzzz"
         )
+    )
+}
+
+@Preview(name = "Catalog - Loading", showBackground = true)
+@Composable
+private fun CatalogLoadingPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(),
+        loadState = CatalogLoadState.Loading
+    )
+}
+
+@Preview(name = "Catalog - Empty", showBackground = true)
+@Composable
+private fun CatalogEmptyPreview() {
+    CatalogPreviewContent(
+        uiState = MovieUiState(),
+        loadState = CatalogLoadState.Empty
+    )
+}
+
+@Preview(name = "Catalog - Error and Retry", showBackground = true)
+@Composable
+private fun CatalogErrorPreview() {
+    val state = remember { mutableStateOf(CatalogLoadState.Error) }
+
+    CatalogPreviewContent(
+        uiState = MovieUiState(),
+        loadState = state.value,
+        onRetry = { state.value = CatalogLoadState.Loading }
     )
 }
