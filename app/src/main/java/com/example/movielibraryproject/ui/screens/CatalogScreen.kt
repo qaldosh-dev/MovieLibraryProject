@@ -37,6 +37,14 @@ import androidx.compose.ui.res.painterResource
 import com.example.movielibraryproject.model.Movie
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.material3.CircularProgressIndicator
+enum class CatalogLoadState {
+    Loading,
+    Success,
+    Error,
+    Empty
+}
+
 
 @Composable
 fun CatalogScreen(
@@ -44,8 +52,21 @@ fun CatalogScreen(
     onQueryChange: (String) -> Unit,
     onMovieClick: (Int) -> Unit,
     onFavoriteClick: (Int) -> Unit,
-    onClearGenre: () -> Unit
+    onClearGenre: () -> Unit,
+    loadState: CatalogLoadState = CatalogLoadState.Success
 ) {
+
+    if (loadState == CatalogLoadState.Loading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
+
     val movies = uiState.filteredMovies
     val selectedGenre = uiState.selectedGenre
     val featuredMovie = uiState.movies.firstOrNull()
