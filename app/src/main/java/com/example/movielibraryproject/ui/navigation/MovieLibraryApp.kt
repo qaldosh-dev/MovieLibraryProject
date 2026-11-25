@@ -50,6 +50,8 @@ import com.example.movielibraryproject.ui.screens.FavoritesScreen
 import com.example.movielibraryproject.ui.screens.GenresScreen
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 import com.example.movielibraryproject.viewmodel.MovieViewModel
+import androidx.compose.runtime.remember
+import com.example.movielibraryproject.data.remote.RemoteMovieRepository
 
 private const val CatalogRoute = "catalog?genre={genre}"
 private const val GenresRoute = "genres"
@@ -60,6 +62,19 @@ private const val DetailsRoute = "details/{movieId}"
 fun MovieLibraryApp() {
     val movieViewModel: MovieViewModel = viewModel()
     val uiState by movieViewModel.uiState.collectAsState()
+
+    val remoteRepository = remember { RemoteMovieRepository() }
+
+    fun requestCatalog() {
+        movieViewModel.loadCatalog {
+            remoteRepository.getMovies()
+        }
+    }
+
+    LaunchedEffect(movieViewModel) {
+        requestCatalog()
+    }
+
     val navController = rememberNavController()
     val currentEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentEntry?.destination?.route
@@ -116,6 +131,7 @@ fun MovieLibraryApp() {
                 }
                 CatalogScreen(
                     loadState = uiState.catalogLoadState,
+                    onRetry = ::requestCatalog,
                     uiState = uiState.copy(selectedGenre = genre),
                     onQueryChange = movieViewModel::onSearchQueryChange,
                     onMovieClick = { movieId ->
