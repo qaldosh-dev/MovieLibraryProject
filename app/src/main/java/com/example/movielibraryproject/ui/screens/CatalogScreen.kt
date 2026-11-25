@@ -42,7 +42,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.movielibraryproject.viewmodel.CatalogLoadState
 import com.example.movielibraryproject.ui.components.NetworkPoster
-
+import com.example.movielibraryproject.data.local.FavoriteMovie
 
 @Composable
 fun CatalogScreen(
@@ -400,7 +400,9 @@ private fun CatalogScreenPreview() {
         uiState = MovieUiState(
             movies = MovieRepository.movies,
             genres = MovieRepository.genres,
-            favoriteIds = setOf(1)
+            savedFavorites = listOf(
+                FavoriteMovie(MovieRepository.movies.first(), note = "")
+            )
         )
     )
 }
@@ -439,7 +441,9 @@ private fun CatalogDarkPreview() {
         uiState = MovieUiState(
             movies = MovieRepository.movies,
             genres = MovieRepository.genres,
-            favoriteIds = setOf(1)
+            savedFavorites = listOf(
+                FavoriteMovie(MovieRepository.movies.first(), note = "")
+            )
         ),
         darkTheme = true
     )
