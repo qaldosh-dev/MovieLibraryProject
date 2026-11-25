@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.movielibraryproject.model.Movie
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
+import com.example.movielibraryproject.data.local.FavoriteMovie
 
 class MovieViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -71,16 +72,18 @@ class MovieViewModel : ViewModel() {
 
     fun toggleFavorite(movieId: Int) {
         _uiState.update { state ->
-            if (state.movies.none { it.id == movieId }) {
-                state
+            val updatedFavorites = if (movieId in state.favoriteIds) {
+                state.savedFavorites.filterNot { it.movie.id == movieId }
             } else {
-                val updatedIds = if (movieId in state.favoriteIds) {
-                    state.favoriteIds - movieId
-                } else {
-                    state.favoriteIds + movieId
-                }
-                state.copy(favoriteIds = updatedIds)
+                val movie = state.movies.find { it.id == movieId } ?: return@update state
+
+                (state.savedFavorites + FavoriteMovie(movie, note = ""))
+                    .sortedBy { favorite ->
+                        state.movies.indexOfFirst { it.id == favorite.movie.id }
+                    }
             }
+
+            state.copy(savedFavorites = updatedFavorites)
         }
     }
 }
