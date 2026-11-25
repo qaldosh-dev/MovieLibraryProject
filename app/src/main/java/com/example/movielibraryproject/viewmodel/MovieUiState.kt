@@ -13,7 +13,7 @@ data class MovieUiState(
     val filteredMovies: List<Movie>
         get() = movies.filter { movie ->
             val matchesQuery = movie.title.contains(searchQuery.trim(), ignoreCase = true)
-            val matchesGenre = selectedGenre == null || movie.genre == selectedGenre
+            val matchesGenre = selectedGenre == null || selectedGenre in movie.genres
             matchesQuery && matchesGenre
         }
 

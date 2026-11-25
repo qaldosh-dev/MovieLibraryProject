@@ -20,7 +20,10 @@ class MovieViewModel : ViewModel() {
     )
     val uiState: StateFlow<MovieUiState> = _uiState.asStateFlow()
 
-    fun loadCatalog(fetchMovies: suspend () -> List<Movie>) {
+    fun loadCatalog(
+        fetchMovies: suspend () -> List<Movie>,
+        getGenres: (List<Movie>) -> List<String>
+    ) {
         viewModelScope.launch {
             if (uiState.value.catalogLoadState == CatalogLoadState.Loading) {
                 return@launch
@@ -30,9 +33,11 @@ class MovieViewModel : ViewModel() {
 
             try {
                 val movies = fetchMovies()
+                val genres = getGenres(movies)
                 _uiState.update { state ->
                     state.copy(
                         movies = movies,
+                        genres = genres,
                         catalogLoadState = if (movies.isEmpty()) {
                             CatalogLoadState.Empty
                         } else {

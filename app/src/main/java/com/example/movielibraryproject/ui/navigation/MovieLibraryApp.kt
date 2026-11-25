@@ -66,9 +66,10 @@ fun MovieLibraryApp() {
     val remoteRepository = remember { RemoteMovieRepository() }
 
     fun requestCatalog() {
-        movieViewModel.loadCatalog {
-            remoteRepository.getMovies()
-        }
+        movieViewModel.loadCatalog(
+            fetchMovies = { remoteRepository.getMovies() },
+            getGenres = remoteRepository::getGenres
+        )
     }
 
     LaunchedEffect(movieViewModel) {
