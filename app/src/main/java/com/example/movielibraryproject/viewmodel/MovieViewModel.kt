@@ -11,8 +11,17 @@ import com.example.movielibraryproject.model.Movie
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import com.example.movielibraryproject.data.local.FavoriteMovie
-
-class MovieViewModel : ViewModel() {
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.movielibraryproject.data.local.FavoritesRepository
+import com.example.movielibraryproject.data.local.MovieDatabase
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+class MovieViewModel(
+    private val favoritesRepository: FavoritesRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(
         MovieUiState(
             movies = MovieRepository.movies,
@@ -20,6 +29,18 @@ class MovieViewModel : ViewModel() {
         )
     )
     val uiState: StateFlow<MovieUiState> = _uiState.asStateFlow()
+
+    private val favoriteWrites = Mutex()
+
+    init {
+        viewModelScope.launch {
+            favoritesRepository.observeFavorites().collect { favorites ->
+                _uiState.update { state ->
+                    state.copy(savedFavorites = favorites)
+                }
+            }
+        }
+    }
 
     fun loadCatalog(
         fetchMovies: suspend () -> List<Movie>,
@@ -71,19 +92,37 @@ class MovieViewModel : ViewModel() {
     }
 
     fun toggleFavorite(movieId: Int) {
-        _uiState.update { state ->
-            val updatedFavorites = if (movieId in state.favoriteIds) {
-                state.savedFavorites.filterNot { it.movie.id == movieId }
-            } else {
-                val movie = state.movies.find { it.id == movieId } ?: return@update state
+        viewModelScope.launch {
+            favoriteWrites.withLock {
+                val saved = favoritesRepository.observeFavorite(movieId).first()
 
-                (state.savedFavorites + FavoriteMovie(movie, note = ""))
-                    .sortedBy { favorite ->
-                        state.movies.indexOfFirst { it.id == favorite.movie.id }
-                    }
+                if (saved != null) {
+                    favoritesRepository.remove(movieId)
+                } else {
+                    val movie = uiState.value.movies.firstOrNull { it.id == movieId }
+                    movie?.let { favoritesRepository.save(it) }
+                }
             }
-
-            state.copy(savedFavorites = updatedFavorites)
         }
     }
+
+    fun saveFavoriteNote(movieId: Int, note: String) {
+        viewModelScope.launch {
+            favoriteWrites.withLock {
+                favoritesRepository.updateNote(movieId, note)
+            }
+        }
+    }
+
+    companion object {
+        val Factory = viewModelFactory {
+            initializer {
+                val application = checkNotNull(this[APPLICATION_KEY])
+                val database = MovieDatabase.getInstance(application)
+                MovieViewModel(FavoritesRepository(database.favoriteMovieDao()))
+            }
+        }
+    }
+
+
 }

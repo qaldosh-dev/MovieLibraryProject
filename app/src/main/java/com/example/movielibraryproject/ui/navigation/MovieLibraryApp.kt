@@ -60,7 +60,7 @@ private const val DetailsRoute = "details/{movieId}"
 
 @Composable
 fun MovieLibraryApp() {
-    val movieViewModel: MovieViewModel = viewModel()
+    val movieViewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
     val uiState by movieViewModel.uiState.collectAsState()
 
     val remoteRepository = remember { RemoteMovieRepository() }
