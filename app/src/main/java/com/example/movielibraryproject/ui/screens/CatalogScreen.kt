@@ -317,6 +317,7 @@ private fun FeaturedMovieCard(
         ) {
             NetworkPoster(
                 posterUrl = movie.posterUrl,
+                posterRes = movie.posterRes,
                 contentDescription = stringResource(
                     R.string.catalog_poster_description,
                     movie.title

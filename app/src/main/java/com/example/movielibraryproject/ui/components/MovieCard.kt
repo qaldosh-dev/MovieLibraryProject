@@ -50,6 +50,7 @@ fun MovieCard(
         ) {
             NetworkPoster(
                 posterUrl = movie.posterUrl,
+                posterRes = movie.posterRes,
                 contentDescription = stringResource(
                     R.string.movie_card_poster_description,
                     movie.title
