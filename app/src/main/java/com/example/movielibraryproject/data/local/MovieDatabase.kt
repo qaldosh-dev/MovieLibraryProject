@@ -11,7 +11,9 @@ import androidx.room.RoomDatabase
     version = 1,
     exportSchema = false
 )
+
 abstract class MovieDatabase : RoomDatabase() {
+    abstract fun favoriteMovieDao(): FavoriteMovieDao
 
     companion object {
         @Volatile
