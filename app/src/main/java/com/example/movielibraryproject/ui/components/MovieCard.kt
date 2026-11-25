@@ -1,6 +1,5 @@
 package com.example.movielibraryproject.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,21 +13,19 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.example.movielibraryproject.R
 import com.example.movielibraryproject.model.Movie
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Density
 
 @Composable
 fun MovieCard(
@@ -51,32 +48,16 @@ fun MovieCard(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (movie.posterRes != 0) {
-                Image(
-                    painter = painterResource(movie.posterRes),
-                    contentDescription = stringResource(
-                        R.string.movie_card_poster_description,
-                        movie.title
-                    ),
-                    modifier = Modifier
-                        .size(width = 84.dp, height = 126.dp)
-                        .clip(RoundedCornerShape(10.dp)),
-                    contentScale = ContentScale.Crop
-                )
-            } else {
-                Box(
-                    modifier = Modifier
-                        .size(width = 84.dp, height = 126.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = stringResource(R.string.movie_card_no_poster),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
-            }
+            NetworkPoster(
+                posterUrl = movie.posterUrl,
+                contentDescription = stringResource(
+                    R.string.movie_card_poster_description,
+                    movie.title
+                ),
+                modifier = Modifier
+                    .size(width = 84.dp, height = 126.dp)
+                    .clip(RoundedCornerShape(10.dp))
+            )
 
             Spacer(Modifier.width(12.dp))
 
@@ -149,6 +130,7 @@ fun MovieCard(
         }
     }
 }
+
 private val previewMovie = Movie(
     id = 1,
     title = "Interstellar",
@@ -189,6 +171,7 @@ private fun LongMovieTitlePreview() {
         )
     }
 }
+
 @Preview(
     showBackground = true,
     name = "Narrow Movie Card",
@@ -206,6 +189,7 @@ private fun NarrowMovieCardPreview() {
         )
     }
 }
+
 @Preview(showBackground = true, name = "Movie Card - Light Theme")
 @Composable
 private fun MovieCardLightPreview() {
@@ -231,6 +215,7 @@ private fun MovieCardDarkPreview() {
         )
     }
 }
+
 @Preview(
     showBackground = true,
     name = "Large Font Movie Card",
