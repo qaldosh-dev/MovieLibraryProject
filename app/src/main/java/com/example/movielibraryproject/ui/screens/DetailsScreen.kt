@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 
 @Composable
 fun DetailsScreen(
@@ -289,6 +290,24 @@ private fun DetailsScreenLandscapePreview() {
             movie = previewMovie,
             isFavorite = false,
             onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailsScreenNoteEditingPreview() {
+    var savedNote by remember {
+        mutableStateOf("One of my favorite movies!")
+    }
+
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = true,
+            onFavoriteClick = {},
+            note = savedNote,
+            onSaveNote = { savedNote = it }
         )
     }
 }
