@@ -28,6 +28,11 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.OutlinedButton
 import android.content.res.Configuration
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 
 @Composable
 fun DetailsScreen(
@@ -47,6 +52,10 @@ fun DetailsScreen(
             )
         }
         return
+    }
+
+    var editedNote by rememberSaveable(movie.id, note) {
+        mutableStateOf(note)
     }
 
     Column(
@@ -96,6 +105,19 @@ fun DetailsScreen(
                             stringResource(R.string.details_no_note)
                         },
                         style = MaterialTheme.typography.bodyLarge
+                    )
+
+                    OutlinedTextField(
+                        value = editedNote,
+                        onValueChange = { editedNote = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {
+                            Text(stringResource(R.string.details_note_label))
+                        },
+                        placeholder = {
+                            Text(stringResource(R.string.details_note_placeholder))
+                        },
+                        minLines = 3
                     )
                 }
             }
