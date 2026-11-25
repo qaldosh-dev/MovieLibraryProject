@@ -21,4 +21,12 @@ class FavoritesRepository(
 
     suspend fun save(movie: Movie): Boolean =
         dao.insert(movie.toEntity()) != -1L
+
+
+    suspend fun updateNote(id: Int, note: String): Boolean =
+        dao.updateNote(id, note) > 0
+
+    suspend fun remove(id: Int): Boolean =
+        dao.deleteById(id) > 0
+
 }
