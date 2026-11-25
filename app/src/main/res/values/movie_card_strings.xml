@@ -2,6 +2,7 @@
 <resources>
     <string name="movie_card_poster_description">Poster of %1$s</string>
     <string name="movie_card_no_poster">No poster</string>
+    <string name="poster_loading">Loading poster…</string>
     <string name="movie_card_remove">Remove %1$s from favorites</string>
     <string name="movie_card_save">Add %1$s to favorites</string>
 </resources>
