@@ -14,6 +14,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.Assert.assertNull
 
 @RunWith(AndroidJUnit4::class)
 class FavoriteMovieDaoTest {
@@ -74,5 +75,26 @@ class FavoriteMovieDaoTest {
         assertEquals(1, all.size)
         assertEquals("my note", all[0].note)
         assertEquals("Movie 1", all[0].title)
+    }
+    @Test
+    fun updateNote_changesOnlyNote() = runBlocking {
+        dao.insert(movie(1))
+
+        val updated = dao.updateNote(1, "new note")
+
+        assertEquals(1, updated)
+        assertEquals("new note", dao.observeById(1).first()?.note)
+    }
+
+    @Test
+    fun deleteById_removesMovie_andFlowReflectsIt() = runBlocking {
+        dao.insert(movie(1))
+        dao.insert(movie(2))
+
+        val deleted = dao.deleteById(1)
+
+        assertEquals(1, deleted)
+        assertNull(dao.observeById(1).first())
+        assertEquals(listOf(2), dao.observeAll().first().map { it.id })
     }
 }
