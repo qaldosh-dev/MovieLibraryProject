@@ -38,3 +38,11 @@ fun FavoriteMovieEntity.toMovie(): Movie {
         posterUrl = posterPath
     )
 }
+
+
+fun FavoriteMovieEntity.toFavoriteMovie(): FavoriteMovie =
+    FavoriteMovie(
+        movie = toMovie(),
+        note = note
+    )
+
