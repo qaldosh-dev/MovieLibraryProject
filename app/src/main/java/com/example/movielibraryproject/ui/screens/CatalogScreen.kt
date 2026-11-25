@@ -41,6 +41,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.movielibraryproject.viewmodel.CatalogLoadState
+import com.example.movielibraryproject.ui.components.NetworkPoster
 
 
 @Composable
@@ -299,6 +300,7 @@ fun CatalogScreen(
     }
 }
 
+
 @Composable
 private fun FeaturedMovieCard(
     movie: Movie,
@@ -313,19 +315,17 @@ private fun FeaturedMovieCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (movie.posterRes != 0) {
-                Image(
-                    painter = painterResource(movie.posterRes),
-                    contentDescription = stringResource(
-                        R.string.catalog_poster_description,
-                        movie.title
-                    ),
-                    modifier = Modifier
-                        .width(100.dp)
-                        .height(150.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            NetworkPoster(
+                posterUrl = movie.posterUrl,
+                posterRes = movie.posterRes,
+                contentDescription = stringResource(
+                    R.string.catalog_poster_description,
+                    movie.title
+                ),
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(150.dp)
+            )
 
             Column(
                 modifier = Modifier.weight(1f),
