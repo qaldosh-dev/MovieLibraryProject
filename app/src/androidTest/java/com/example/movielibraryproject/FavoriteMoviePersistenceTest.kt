@@ -65,4 +65,19 @@ class FavoriteMoviePersistenceTest {
         assertEquals(1, saved?.id)
         assertEquals("Movie 1", saved?.title)
     }
+    @Test
+    fun updatedNoteSurvivesDatabaseReopen() = runBlocking {
+        database.favoriteMovieDao().insert(movie(1))
+
+        database.favoriteMovieDao().updateNote(1, "Amazing movie!")
+
+        database.close()
+        database = openDatabase()
+
+        val saved = database.favoriteMovieDao()
+            .observeById(1).first()
+
+        assertEquals(1, saved?.id)
+        assertEquals("Amazing movie!", saved?.note)
+    }
 }
