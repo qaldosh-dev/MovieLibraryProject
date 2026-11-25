@@ -1,6 +1,11 @@
 
 package com.example.movielibraryproject
 
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.withTimeout
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -96,5 +101,33 @@ class FavoriteMovieDaoTest {
         assertEquals(1, deleted)
         assertNull(dao.observeById(1).first())
         assertEquals(listOf(2), dao.observeAll().first().map { it.id })
+    }
+
+    @Test
+    fun flow_emitsChangesAutomatically() = runBlocking {
+        withTimeout(10000) {
+            val updates = Channel<List<FavoriteMovieEntity>>(
+                Channel.UNLIMITED
+            )
+
+            val job = launch {
+                dao.observeAll().collect {
+                    updates.send(it)
+                }
+            }
+
+            assertEquals(0, updates.receive().size)
+
+            dao.insert(movie(1))
+            assertEquals(1, updates.receive().size)
+
+            dao.updateNote(1, "Updated note")
+            assertEquals("Updated note", updates.receive()[0].note)
+
+            dao.deleteById(1)
+            assertEquals(0, updates.receive().size)
+
+            job.cancel()
+        }
     }
 }
