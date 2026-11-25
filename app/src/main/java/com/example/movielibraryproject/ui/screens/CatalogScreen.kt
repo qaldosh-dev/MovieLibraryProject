@@ -313,17 +313,19 @@ private fun FeaturedMovieCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(movie.posterRes),
-                contentDescription = stringResource(
-                    R.string.catalog_poster_description,
-                    movie.title
-                ),
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(150.dp),
-                contentScale = ContentScale.Crop
-            )
+            if (movie.posterRes != 0) {
+                Image(
+                    painter = painterResource(movie.posterRes),
+                    contentDescription = stringResource(
+                        R.string.catalog_poster_description,
+                        movie.title
+                    ),
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(150.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             Column(
                 modifier = Modifier.weight(1f),

@@ -54,19 +54,21 @@ fun DetailsScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        Image(
-            painter = painterResource(movie.posterRes),
-            contentDescription = stringResource(
-                R.string.details_poster_description,
-                movie.title
-            ),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .widthIn(max = 240.dp)
-                .fillMaxWidth()
-                .aspectRatio(2f / 3f),
-            contentScale = ContentScale.Fit
-        )
+        if (movie.posterRes != 0){
+            Image(
+                painter = painterResource(movie.posterRes),
+                contentDescription = stringResource(
+                    R.string.details_poster_description,
+                    movie.title
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .widthIn(max = 240.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(2f / 3f),
+                contentScale = ContentScale.Fit
+            )
+        }
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(
