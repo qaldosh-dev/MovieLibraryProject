@@ -17,4 +17,7 @@ interface FavoriteMovieDao {
 
     @Query("SELECT * FROM favorite_movies WHERE id = :id")
     fun observeById(id: Int): Flow<FavoriteMovieEntity?>
+
+    @Query("UPDATE favorite_movies SET note = :note WHERE id = :id")
+    suspend fun updateNote(id: Int, note: String): Int
 }
