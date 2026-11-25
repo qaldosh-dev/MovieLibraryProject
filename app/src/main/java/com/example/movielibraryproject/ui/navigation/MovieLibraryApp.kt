@@ -67,6 +67,8 @@ import com.example.movielibraryproject.ui.screens.FavoritesScreen
 import com.example.movielibraryproject.ui.screens.GenresScreen
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 import com.example.movielibraryproject.viewmodel.MovieViewModel
+import androidx.compose.runtime.remember
+import com.example.movielibraryproject.data.remote.RemoteMovieRepository
 
 private const val CatalogRoute = "catalog?genre={genre}"
 private const val GenresRoute = "genres"
@@ -75,9 +77,23 @@ private const val DetailsRoute = "details/{movieId}?fromFavorites={fromFavorites
 
 @Composable
 fun MovieLibraryApp() {
-    val movieViewModel: MovieViewModel = viewModel()
+    val movieViewModel: MovieViewModel = viewModel(factory = MovieViewModel.Factory)
     val uiState by movieViewModel.uiState.collectAsState()
     var showCredits by rememberSaveable { mutableStateOf(false) }
+
+    val remoteRepository = remember { RemoteMovieRepository() }
+
+    fun requestCatalog() {
+        movieViewModel.loadCatalog(
+            fetchMovies = { remoteRepository.getMovies() },
+            getGenres = remoteRepository::getGenres
+        )
+    }
+
+    LaunchedEffect(movieViewModel) {
+        requestCatalog()
+    }
+
     val navController = rememberNavController()
     val currentEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentEntry?.destination?.route
@@ -134,6 +150,8 @@ fun MovieLibraryApp() {
                     movieViewModel.onGenreSelected(genre)
                 }
                 CatalogScreen(
+                    loadState = uiState.catalogLoadState,
+                    onRetry = ::requestCatalog,
                     uiState = uiState.copy(selectedGenre = genre),
                     onQueryChange = movieViewModel::onSearchQueryChange,
                     onMovieClick = { movieId ->
@@ -175,6 +193,7 @@ fun MovieLibraryApp() {
                 )
             ) { entry ->
                 val movieId = entry.arguments?.getInt("movieId")
+                val savedFavorite = uiState.savedFavorites.firstOrNull { it.movie.id == movieId }
                 val movie = resolveDetailsMovie(
                     movieId = movieId,
                     movies = uiState.movies,
@@ -186,6 +205,10 @@ fun MovieLibraryApp() {
                     isFavorite = movie != null && movie.id in uiState.favoriteIds,
                     onFavoriteClick = {
                         movie?.let { movieViewModel.toggleFavorite(it.id) }
+                    },
+                    note = savedFavorite?.note.orEmpty(),
+                    onSaveNote = { note ->
+                        savedFavorite?.let { movieViewModel.saveFavoriteNote(it.movie.id, note) }
                     }
                 )
             }

@@ -28,12 +28,20 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.OutlinedButton
 import android.content.res.Configuration
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 
 @Composable
 fun DetailsScreen(
     movie: Movie?,
     isFavorite: Boolean,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    note: String = "",
+    onSaveNote: (String) -> Unit = {}
 ) {
     if (movie == null) {
         Box(
@@ -47,6 +55,10 @@ fun DetailsScreen(
         return
     }
 
+    var editedNote by rememberSaveable(movie.id, note) {
+        mutableStateOf(note)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,19 +66,21 @@ fun DetailsScreen(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        Image(
-            painter = painterResource(movie.posterRes),
-            contentDescription = stringResource(
-                R.string.details_poster_description,
-                movie.title
-            ),
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-                .widthIn(max = 240.dp)
-                .fillMaxWidth()
-                .aspectRatio(2f / 3f),
-            contentScale = ContentScale.Fit
-        )
+        if (movie.posterRes != 0){
+            Image(
+                painter = painterResource(movie.posterRes),
+                contentDescription = stringResource(
+                    R.string.details_poster_description,
+                    movie.title
+                ),
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .widthIn(max = 240.dp)
+                    .fillMaxWidth()
+                    .aspectRatio(2f / 3f),
+                contentScale = ContentScale.Fit
+            )
+        }
 
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(
@@ -79,6 +93,42 @@ fun DetailsScreen(
                 text = movie.title,
                 style = MaterialTheme.typography.headlineMedium
             )
+
+            if (isFavorite) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = stringResource(R.string.details_note_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Text(
+                        text = note.ifBlank {
+                            stringResource(R.string.details_no_note)
+                        },
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+
+                    OutlinedTextField(
+                        value = editedNote,
+                        onValueChange = { editedNote = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = {
+                            Text(stringResource(R.string.details_note_label))
+                        },
+                        placeholder = {
+                            Text(stringResource(R.string.details_note_placeholder))
+                        },
+                        minLines = 3
+                    )
+                    Button(
+                        onClick = { onSaveNote(editedNote) },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = editedNote != note
+                    ) {
+                        Text(stringResource(R.string.details_save_note))
+                    }
+                }
+            }
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -161,7 +211,8 @@ private fun DetailsScreenFavoritePreview() {
         DetailsScreen(
             movie = previewMovie,
             isFavorite = true,
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            note = "One of my favorite movies!"
         )
     }
 }
@@ -239,6 +290,24 @@ private fun DetailsScreenLandscapePreview() {
             movie = previewMovie,
             isFavorite = false,
             onFavoriteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DetailsScreenNoteEditingPreview() {
+    var savedNote by remember {
+        mutableStateOf("One of my favorite movies!")
+    }
+
+    MovieLibraryProjectTheme {
+        DetailsScreen(
+            movie = previewMovie,
+            isFavorite = true,
+            onFavoriteClick = {},
+            note = savedNote,
+            onSaveNote = { savedNote = it }
         )
     }
 }
