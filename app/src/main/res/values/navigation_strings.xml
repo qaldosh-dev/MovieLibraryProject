@@ -6,4 +6,11 @@
     <string name="navigation_details">Movie details</string>
     <string name="navigation_back">Back</string>
     <string name="navigation_app_title">Movie Library</string>
+    <string name="navigation_about">About</string>
+    <string name="navigation_about_title">About Movie Library</string>
+    <string name="navigation_tmdb_attribution">This product uses the TMDB API but is not endorsed or certified by TMDB.</string>
+    <string name="navigation_tmdb_logo">The Movie Database (TMDB) logo</string>
+    <string name="navigation_tmdb_website">Visit TMDB</string>
+    <string name="navigation_tmdb_url" translatable="false">https://www.themoviedb.org</string>
+    <string name="navigation_close">Close</string>
 </resources>
