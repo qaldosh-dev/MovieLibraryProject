@@ -33,7 +33,9 @@ import android.content.res.Configuration
 fun DetailsScreen(
     movie: Movie?,
     isFavorite: Boolean,
-    onFavoriteClick: () -> Unit
+    onFavoriteClick: () -> Unit,
+    note: String = "",
+    onSaveNote: (String) -> Unit = {}
 ) {
     if (movie == null) {
         Box(
