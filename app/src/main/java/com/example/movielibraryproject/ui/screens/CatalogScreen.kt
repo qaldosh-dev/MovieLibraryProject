@@ -41,7 +41,8 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import com.example.movielibraryproject.viewmodel.CatalogLoadState
-
+import com.example.movielibraryproject.ui.components.NetworkPoster
+import com.example.movielibraryproject.data.local.FavoriteMovie
 
 @Composable
 fun CatalogScreen(
@@ -299,6 +300,7 @@ fun CatalogScreen(
     }
 }
 
+
 @Composable
 private fun FeaturedMovieCard(
     movie: Movie,
@@ -313,19 +315,17 @@ private fun FeaturedMovieCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (movie.posterRes != 0) {
-                Image(
-                    painter = painterResource(movie.posterRes),
-                    contentDescription = stringResource(
-                        R.string.catalog_poster_description,
-                        movie.title
-                    ),
-                    modifier = Modifier
-                        .width(100.dp)
-                        .height(150.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
+            NetworkPoster(
+                posterUrl = movie.posterUrl,
+                posterRes = movie.posterRes,
+                contentDescription = stringResource(
+                    R.string.catalog_poster_description,
+                    movie.title
+                ),
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(150.dp)
+            )
 
             Column(
                 modifier = Modifier.weight(1f),
@@ -400,7 +400,9 @@ private fun CatalogScreenPreview() {
         uiState = MovieUiState(
             movies = MovieRepository.movies,
             genres = MovieRepository.genres,
-            favoriteIds = setOf(1)
+            savedFavorites = listOf(
+                FavoriteMovie(MovieRepository.movies.first(), note = "")
+            )
         )
     )
 }
@@ -439,7 +441,9 @@ private fun CatalogDarkPreview() {
         uiState = MovieUiState(
             movies = MovieRepository.movies,
             genres = MovieRepository.genres,
-            favoriteIds = setOf(1)
+            savedFavorites = listOf(
+                FavoriteMovie(MovieRepository.movies.first(), note = "")
+            )
         ),
         darkTheme = true
     )
