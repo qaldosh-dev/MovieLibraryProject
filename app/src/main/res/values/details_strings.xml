@@ -7,4 +7,10 @@
     <string name="details_rating">Rating: %1$.1f / 10</string>
     <string name="details_overview">Overview</string>
     <string name="details_poster_description">Poster of %1$s</string>
+
+    <string name="details_note_title">My note</string>
+    <string name="details_note_label">Your note</string>
+    <string name="details_note_placeholder">Write your thoughts about this movie</string>
+    <string name="details_save_note">Save note</string>
+    <string name="details_no_note">No note yet</string>
 </resources>
