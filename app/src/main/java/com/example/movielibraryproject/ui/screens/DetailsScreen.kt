@@ -84,6 +84,22 @@ fun DetailsScreen(
                 style = MaterialTheme.typography.headlineMedium
             )
 
+            if (isFavorite) {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(
+                        text = stringResource(R.string.details_note_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+
+                    Text(
+                        text = note.ifBlank {
+                            stringResource(R.string.details_no_note)
+                        },
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                }
+            }
+
             Row(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -165,7 +181,8 @@ private fun DetailsScreenFavoritePreview() {
         DetailsScreen(
             movie = previewMovie,
             isFavorite = true,
-            onFavoriteClick = {}
+            onFavoriteClick = {},
+            note = "One of my favorite movies!"
         )
     }
 }
