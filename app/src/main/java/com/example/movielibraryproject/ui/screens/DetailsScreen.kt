@@ -119,6 +119,13 @@ fun DetailsScreen(
                         },
                         minLines = 3
                     )
+                    Button(
+                        onClick = { onSaveNote(editedNote) },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = editedNote != note
+                    ) {
+                        Text(stringResource(R.string.details_save_note))
+                    }
                 }
             }
 
