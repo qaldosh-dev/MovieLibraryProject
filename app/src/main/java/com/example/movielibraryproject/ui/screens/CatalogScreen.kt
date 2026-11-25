@@ -40,12 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-enum class CatalogLoadState {
-    Loading,
-    Success,
-    Error,
-    Empty
-}
+import com.example.movielibraryproject.viewmodel.CatalogLoadState
 
 
 @Composable
@@ -318,17 +313,19 @@ private fun FeaturedMovieCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(movie.posterRes),
-                contentDescription = stringResource(
-                    R.string.catalog_poster_description,
-                    movie.title
-                ),
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(150.dp),
-                contentScale = ContentScale.Crop
-            )
+            if (movie.posterRes != 0) {
+                Image(
+                    painter = painterResource(movie.posterRes),
+                    contentDescription = stringResource(
+                        R.string.catalog_poster_description,
+                        movie.title
+                    ),
+                    modifier = Modifier
+                        .width(100.dp)
+                        .height(150.dp),
+                    contentScale = ContentScale.Crop
+                )
+            }
 
             Column(
                 modifier = Modifier.weight(1f),
