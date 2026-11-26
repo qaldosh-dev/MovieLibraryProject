@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.movielibraryproject.R
+import com.example.movielibraryproject.data.preferences.FavoritesSortOrder
 import com.example.movielibraryproject.model.Movie
 import com.example.movielibraryproject.ui.components.MovieCard
 import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
@@ -32,7 +35,9 @@ import com.example.movielibraryproject.ui.theme.MovieLibraryProjectTheme
 fun FavoritesScreen(
     movies: List<Movie>,
     onMovieClick: (Int) -> Unit,
-    onFavoriteClick: (Int) -> Unit
+    onFavoriteClick: (Int) -> Unit,
+    sortOrder: FavoritesSortOrder = FavoritesSortOrder.TITLE,
+    onSortOrderChange: (FavoritesSortOrder) -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -59,6 +64,25 @@ fun FavoritesScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+
+            Text(
+                text = stringResource(R.string.favorites_sort_label),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                FilterChip(
+                    selected = sortOrder == FavoritesSortOrder.TITLE,
+                    onClick = { onSortOrderChange(FavoritesSortOrder.TITLE) },
+                    label = { Text(stringResource(R.string.favorites_sort_title)) }
+                )
+                FilterChip(
+                    selected = sortOrder == FavoritesSortOrder.RECENTLY_ADDED,
+                    onClick = { onSortOrderChange(FavoritesSortOrder.RECENTLY_ADDED) },
+                    label = { Text(stringResource(R.string.favorites_sort_recently_added)) }
+                )
+            }
 
             Text(
                 text = pluralStringResource(

@@ -176,10 +176,12 @@ fun MovieLibraryApp() {
             composable(FavoritesRoute) {
                 FavoritesScreen(
                     movies = uiState.favoriteMovies,
+                    sortOrder = uiState.favoriteSortOrder,
                     onMovieClick = { movieId ->
                         navController.openMovieDetails(movieId, fromFavorites = true)
                     },
-                    onFavoriteClick = movieViewModel::toggleFavorite
+                    onFavoriteClick = movieViewModel::toggleFavorite,
+                    onSortOrderChange = movieViewModel::setFavoriteSortOrder
                 )
             }
             composable(
