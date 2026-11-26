@@ -1,33 +1,32 @@
 # Movie Library
 
-Movie Library is a small Android app for discovering movies and keeping a list of favorites during a session. The catalog includes six movies across Science Fiction, Drama, and Comedy, so you can browse by genre or look up a title you already know. We built it with Kotlin and Jetpack Compose for our Mobile Development course.
+Movie Library is an Android app for discovering movies and keeping a personal collection. We built it with Kotlin and Jetpack Compose for our Mobile Development course. The catalog uses live data from The Movie Database (TMDB), and saved movies and notes stay on the device.
 
 ## Features
 
-- **Browse the catalog:** See movie posters and a featured pick on the home screen.
-- **Search by title:** Results update as you type, and the Clear button resets your search.
-- **Explore genres:** Pick a genre to see the movies that belong to it.
-- **View movie details:** Open a movie to see its poster, release year, genre, rating, and overview.
-- **Manage favorites:** Tap the heart to save a movie or remove it from your collection.
-- **Use the app offline:** Movies and posters are bundled with the app, and the interface follows the device's light or dark theme.
-
-Favorites reset when the app process restarts.
+- Browse movies from TMDB, search the loaded catalog by title, and filter it by genre.
+- View movie details, including the poster, release year, genres, rating, and overview. Coil loads posters from TMDB image URLs.
+- See loading, empty, and error states. Use **Retry** if the catalog fails to load.
+- Add or remove favorites and edit a personal note for each saved movie. Favorites and notes are available offline after reopening the app.
+- Sort favorites by title or by most recently added. The app remembers the selected order after a restart.
 
 ## Navigation
 
-The app uses Navigation Compose to connect Catalog, Genres, Favorites, and Movie Details. Selecting a genre opens a filtered catalog. Selecting a movie passes its ID to the Details screen.
+Navigation Compose connects Catalog, Genres, Favorites, and Movie Details. Selecting a genre opens a filtered catalog. Selecting a film passes its ID and the source screen to Details, so a saved film can be opened from Favorites even when the online catalog is unavailable.
 
-## MVVM
+## MVVM and Data
 
-The model describes a movie, and the repository provides the local catalog. A shared ViewModel uses StateFlow to manage search, genre filters, and favorites. The Compose screens display that state and send user actions back to the ViewModel.
+- **Network:** Retrofit fetches the TMDB catalog. Gson reads the JSON into Kotlin DTOs, which the remote repository maps to the app's movie model.
+- **Local storage:** Room stores favorite movies and notes in the `favorite_movies` table. Preferences DataStore stores the selected sort order.
+- **UI state:** `MovieViewModel` uses Kotlin coroutines to load data and exposes state through `StateFlow`. Compose observes that state and sends user actions back to the ViewModel.
 
 ## GitHub Workflow
 
-We tracked tasks in GitHub Issues and worked on separate branches. We opened pull requests for review and used GitHub Actions to build the app, run unit tests, and check Android Lint before merging into main.
+We tracked tasks in GitHub Issues, worked on separate feature branches, and opened pull requests for review. GitHub Actions builds the app and runs Android Lint and unit tests.
 
 ## Team
 
-- Bauyrzhan — team lead, catalog, and shared state
-- Aigerim — movie details, posters, and app icon
-- Ayaulym — theme, movie cards, and Favorites
-- Niyazbek — movie repository, genres, and navigation
+- **Bauyrzhan** — team lead, catalog, API loading and retry, Room integration in the ViewModel, and applying the saved sort order.
+- **Aigerim** — movie details, app icon, Room database and DAO, note editing, and persistence tests.
+- **Ayaulym** — theme, movie cards, Favorites screen, Coil posters, and DataStore sorting preferences and controls.
+- **Niyazbek** — genres, navigation, TMDB integration, and the About dialog with TMDB attribution.
