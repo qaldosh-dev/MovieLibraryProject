@@ -180,7 +180,8 @@ fun MovieLibraryApp() {
                     onMovieClick = { movieId ->
                         navController.openMovieDetails(movieId, fromFavorites = true)
                     },
-                    onFavoriteClick = movieViewModel::toggleFavorite
+                    onFavoriteClick = movieViewModel::toggleFavorite,
+                    onSortOrderChange = movieViewModel::setFavoriteSortOrder
                 )
             }
             composable(
