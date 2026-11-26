@@ -2,6 +2,9 @@
 <resources>
     <string name="favorites_title">My Favorites</string>
     <string name="favorites_subtitle">Your personal movie collection</string>
+    <string name="favorites_sort_label">Sort by</string>
+    <string name="favorites_sort_title">Title</string>
+    <string name="favorites_sort_recently_added">Recently added</string>
 
     <string name="favorites_empty_title">Your favorites list is empty</string>
     <string name="favorites_empty_message">Movies you add to your favorites will appear here. Tap the heart icon on any movie to save it.</string>
