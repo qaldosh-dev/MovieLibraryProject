@@ -19,8 +19,14 @@ import com.example.movielibraryproject.data.local.MovieDatabase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import com.example.movielibraryproject.data.preferences.FavoritesPreferencesRepository
+import com.example.movielibraryproject.data.preferences.FavoritesSortOrder
+import kotlinx.coroutines.flow.Flow
+
 class MovieViewModel(
-    private val favoritesRepository: FavoritesRepository
+    private val favoritesRepository: FavoritesRepository,
+    private val sortOrders: Flow<FavoritesSortOrder>,
+    private val saveSortOrder: suspend (FavoritesSortOrder) -> Unit
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(
         MovieUiState(
@@ -37,6 +43,13 @@ class MovieViewModel(
             favoritesRepository.observeFavorites().collect { favorites ->
                 _uiState.update { state ->
                     state.copy(savedFavorites = favorites)
+                }
+            }
+        }
+        viewModelScope.launch {
+            sortOrders.collect { order ->
+                _uiState.update { state ->
+                    state.copy(favoriteSortOrder = order)
                 }
             }
         }
@@ -114,12 +127,24 @@ class MovieViewModel(
         }
     }
 
+    fun setFavoriteSortOrder(order: FavoritesSortOrder) {
+        viewModelScope.launch {
+            saveSortOrder(order)
+        }
+    }
+
     companion object {
         val Factory = viewModelFactory {
             initializer {
                 val application = checkNotNull(this[APPLICATION_KEY])
                 val database = MovieDatabase.getInstance(application)
-                MovieViewModel(FavoritesRepository(database.favoriteMovieDao()))
+                val preferences = FavoritesPreferencesRepository(application)
+
+                MovieViewModel(
+                    favoritesRepository = FavoritesRepository(database.favoriteMovieDao()),
+                    sortOrders = preferences.sortOrder,
+                    saveSortOrder = preferences::setSortOrder
+                )
             }
         }
     }

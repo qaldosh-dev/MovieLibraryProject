@@ -5,6 +5,7 @@ import com.example.movielibraryproject.data.local.FavoriteMovieDao
 import com.example.movielibraryproject.data.local.FavoriteMovieEntity
 import com.example.movielibraryproject.data.local.FavoritesRepository
 import com.example.movielibraryproject.data.MovieRepository
+import com.example.movielibraryproject.data.preferences.FavoritesSortOrder
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,11 +25,16 @@ import org.junit.Test
 class MovieViewModelTest {
 
     private lateinit var viewModel: MovieViewModel
+    private val sortOrders = MutableStateFlow(FavoritesSortOrder.TITLE)
 
     @Before
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        viewModel = MovieViewModel(FavoritesRepository(TestFavoriteMovieDao()))
+        viewModel = MovieViewModel(
+            favoritesRepository = FavoritesRepository(TestFavoriteMovieDao()),
+            sortOrders = sortOrders,
+            saveSortOrder = { sortOrders.value = it }
+        )
     }
 
     @After
@@ -116,6 +122,20 @@ class MovieViewModelTest {
         viewModel.toggleFavorite(6)
         assertTrue(viewModel.uiState.value.favoriteMovies.isEmpty())
         assertEquals("truman", viewModel.uiState.value.searchQuery)
+    }
+
+    @Test
+    fun changingSortOrderReordersFavoriteMovies() {
+        viewModel.toggleFavorite(6) // Home Alone
+        viewModel.toggleFavorite(1) // Interstellar
+
+        assertEquals(listOf(6, 1), viewModel.uiState.value.favoriteMovies.map { it.id })
+
+        viewModel.setFavoriteSortOrder(FavoritesSortOrder.RECENTLY_ADDED)
+
+        assertEquals(FavoritesSortOrder.RECENTLY_ADDED, sortOrders.value)
+        assertEquals(FavoritesSortOrder.RECENTLY_ADDED, viewModel.uiState.value.favoriteSortOrder)
+        assertEquals(listOf(1, 6), viewModel.uiState.value.favoriteMovies.map { it.id })
     }
 
     @Test
