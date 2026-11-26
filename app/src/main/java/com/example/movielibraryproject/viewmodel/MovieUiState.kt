@@ -2,6 +2,7 @@ package com.example.movielibraryproject.viewmodel
 
 import com.example.movielibraryproject.data.local.FavoriteMovie
 import com.example.movielibraryproject.model.Movie
+import com.example.movielibraryproject.data.preferences.FavoritesSortOrder
 
 data class MovieUiState(
     val movies: List<Movie> = emptyList(),
@@ -9,7 +10,8 @@ data class MovieUiState(
     val searchQuery: String = "",
     val selectedGenre: String? = null,
     val savedFavorites: List<FavoriteMovie> = emptyList(),
-    val catalogLoadState: CatalogLoadState = CatalogLoadState.Success
+    val catalogLoadState: CatalogLoadState = CatalogLoadState.Success,
+    val favoriteSortOrder: FavoritesSortOrder = FavoritesSortOrder.TITLE
 ) {
     val filteredMovies: List<Movie>
         get() = movies.filter { movie ->
@@ -22,5 +24,12 @@ data class MovieUiState(
         get() = savedFavorites.map { it.movie.id }.toSet()
 
     val favoriteMovies: List<Movie>
-        get() = savedFavorites.map { it.movie }
+        get() {
+            val movies = savedFavorites.map { it.movie }
+
+            return when (favoriteSortOrder) {
+                FavoritesSortOrder.TITLE -> movies.sortedBy { it.title.lowercase() }
+                FavoritesSortOrder.RECENTLY_ADDED -> movies
+            }
+        }
 }
